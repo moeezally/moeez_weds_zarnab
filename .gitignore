@@ -1,0 +1,5 @@
+# source footage — not needed by the published invite
+*.mov
+
+# the second invite, kept local for now
+shendi-invite.html
