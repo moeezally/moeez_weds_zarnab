@@ -654,7 +654,7 @@
     }
 
     .envelope.is-fading {
-      animation: envGone 1.3s cubic-bezier(.4, 0, .5, 1) forwards
+      animation: envGone 2.2s cubic-bezier(.35, 0, .45, 1) forwards
     }
 
     .envelope.is-gone {
@@ -1390,7 +1390,7 @@
           if (handed) return;
           handed = true;
           env.classList.add("is-fading");
-          setTimeout(finish, 1300);
+          setTimeout(finish, 2300);
         }
         function open() {
           if (opened) return;
@@ -1402,7 +1402,8 @@
           if (p && p.catch) p.catch(function () { finish(); });
           film.addEventListener("ended", hand);
           film.addEventListener("timeupdate", function () {
-            if (film.duration && film.currentTime >= film.duration - 1.35) hand();
+            // 2.10s is where the seal reaches full size and the flaps begin to part
+            if (film.currentTime >= 2.1) hand();
           });
           setTimeout(hand, 9000);   // backstop if the file never reports progress
         }
@@ -1525,70 +1526,130 @@
       })();
 
       /* ---------- music ---------- */
-      (function () {
-        var audio = document.getElementById('music');
-        var btn = document.getElementById('musicBtn');
-        if (!audio || !btn) return;
+            (function () {
+              var btn = document.getElementById('musicBtn');
+              var el = document.getElementById('music');   // plain-element fallback
+              if (!btn) return;
 
-        var LEVEL = 0.55;   // never at full tilt — it plays under the invitation
-        var RAMP = 0.5;     // seconds of fade at the start and into the loop seam
-        var wanted = true;
-        try { wanted = localStorage.getItem('mz-music') !== 'off'; } catch (e) { }
+              var LEVEL = 0.55;
+              var XFADE = 1.4;        // seconds each pass overlaps the next
+              var wanted = true;
+              try { wanted = localStorage.getItem('mz-music') !== 'off'; } catch (e) { }
 
-        function remember() {
-          try { localStorage.setItem('mz-music', wanted ? 'on' : 'off'); } catch (e) { }
-        }
-        function sync() {
-          var on = wanted && !audio.paused;
-          btn.classList.toggle('is-off', !on);
-          btn.setAttribute('aria-pressed', on ? 'true' : 'false');
-          btn.setAttribute('aria-label', on ? 'Turn music off' : 'Turn music on');
-        }
-        function start() {
-          if (!wanted) return;
-          audio.volume = 0;
-          var p = audio.play();
-          if (p && p.catch) p.catch(function () { });
-        }
+              var ctx = null, buffer = null, master = null;
+              var nextAt = 0, pump = null, started = false, viaElement = false;
 
-        // the track is quiet at both ends, so a short ramp either side of the
-        // loop point hides the seam without a second element
-        function level() {
-          if (!audio.paused) {
-            var t = audio.currentTime, d = audio.duration || 24.15, v = LEVEL;
-            if (t < RAMP) v = LEVEL * (t / RAMP);
-            else if (d - t < RAMP) v = LEVEL * ((d - t) / RAMP);
-            audio.volume = Math.max(0, Math.min(1, v));
-          }
-          requestAnimationFrame(level);
-        }
-        requestAnimationFrame(level);
+              function sync(on) {
+                btn.classList.toggle('is-off', !on);
+                btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+                btn.setAttribute('aria-label', on ? 'Turn music off' : 'Turn music on');
+              }
 
-        audio.addEventListener('play', sync);
-        audio.addEventListener('pause', sync);
+              // A plain `loop` restarts the file cold, which is audible on music that
+              // does not end where it begins. Each pass is scheduled to overlap the
+              // one before it and crossfade, so the join is never a hard edge.
+              function schedule(when) {
+                var src = ctx.createBufferSource();
+                src.buffer = buffer;
+                var g = ctx.createGain();
+                src.connect(g); g.connect(master);
+                var d = buffer.duration;
+                g.gain.setValueAtTime(0.0001, when);
+                g.gain.linearRampToValueAtTime(1, when + XFADE);
+                g.gain.setValueAtTime(1, when + d - XFADE);
+                g.gain.linearRampToValueAtTime(0.0001, when + d);
+                src.start(when);
+                src.stop(when + d + 0.1);
+                nextAt = when + d - XFADE;
+              }
 
-        btn.addEventListener('click', function (e) {
-          e.stopPropagation();
-          wanted = !wanted;
-          if (wanted) start(); else audio.pause();
-          remember(); sync();
-        });
+              function pumpAhead() {
+                if (!ctx || !buffer) return;
+                var guard = 0;
+                while (nextAt < ctx.currentTime + 2 && guard++ < 8) schedule(nextAt);
+              }
 
-        // browsers only allow sound after a gesture — opening the envelope is one
-        ['click', 'touchstart', 'keydown'].forEach(function (ev) {
-          addEventListener(ev, function once() {
-            removeEventListener(ev, once);
-            start();
-          }, { passive: true });
-        });
+              function viaWebAudio() {
+                var AC = window.AudioContext || window.webkitAudioContext;
+                if (!AC) return Promise.reject(new Error('no web audio'));
+                ctx = new AC();
+                master = ctx.createGain();
+                master.gain.value = wanted ? LEVEL : 0.0001;
+                master.connect(ctx.destination);
+                return fetch('invite-music.m4a')
+                  .then(function (r) { return r.arrayBuffer(); })
+                  .then(function (b) {
+                    return new Promise(function (res, rej) {
+                      var out = ctx.decodeAudioData(b, res, rej);
+                      if (out && out.then) out.then(res, rej);
+                    });
+                  })
+                  .then(function (buf) {
+                    buffer = buf;
+                    nextAt = ctx.currentTime + 0.06;
+                    schedule(nextAt);
+                    pump = setInterval(pumpAhead, 500);
+                    sync(wanted);
+                  });
+              }
 
-        document.addEventListener('visibilitychange', function () {
-          if (document.hidden) audio.pause();
-          else if (wanted) start();
-        });
+              function viaPlainElement() {
+                if (!el) return;
+                viaElement = true;
+                el.loop = true;
+                el.volume = wanted ? LEVEL : 0;
+                if (wanted) { var p = el.play(); if (p && p.catch) p.catch(function () { }); }
+                sync(wanted && !el.paused);
+              }
 
-        sync();
-      })();
+              function begin() {
+                if (started) {
+                  if (ctx && ctx.state === 'suspended') ctx.resume();
+                  return;
+                }
+                started = true;
+                viaWebAudio().catch(function () { viaPlainElement(); });
+              }
+
+              btn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                wanted = !wanted;
+                try { localStorage.setItem('mz-music', wanted ? 'on' : 'off'); } catch (e2) { }
+                if (ctx && master) {
+                  var t = ctx.currentTime;
+                  master.gain.cancelScheduledValues(t);
+                  master.gain.setValueAtTime(Math.max(master.gain.value, 0.0001), t);
+                  master.gain.linearRampToValueAtTime(wanted ? LEVEL : 0.0001, t + 0.4);
+                  if (wanted && ctx.state === 'suspended') ctx.resume();
+                } else if (viaElement && el) {
+                  el.volume = wanted ? LEVEL : 0;
+                  if (wanted) { var p = el.play(); if (p && p.catch) p.catch(function () { }); }
+                } else if (wanted) {
+                  begin();
+                }
+                sync(wanted);
+              });
+
+              // sound needs a gesture; opening the envelope is one
+              ['click', 'touchstart', 'keydown'].forEach(function (ev) {
+                addEventListener(ev, function once() {
+                  removeEventListener(ev, once);
+                  if (wanted) begin();
+                }, { passive: true });
+              });
+
+              document.addEventListener('visibilitychange', function () {
+                if (document.hidden) {
+                  if (ctx && ctx.state === 'running') ctx.suspend();
+                  if (viaElement && el) el.pause();
+                } else if (wanted) {
+                  if (ctx && ctx.state === 'suspended') ctx.resume();
+                  if (viaElement && el) { var p = el.play(); if (p && p.catch) p.catch(function () { }); }
+                }
+              });
+
+              sync(false);
+            })();
 
     })();
   </script>
