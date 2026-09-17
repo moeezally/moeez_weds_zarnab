@@ -625,9 +625,9 @@
       bottom: 8%;
       z-index: 3;
       text-align: center;
-      color: #fff6ea;
-      opacity: .85;
-      text-shadow: 0 1px 10px rgba(60, 25, 15, .55);
+      color: #640c04;
+      opacity: .92;
+      text-shadow: 0 1px 8px rgba(255, 247, 235, .85);
       font-size: 10px;
       letter-spacing: 0.3em;
       text-transform: uppercase;
@@ -654,7 +654,7 @@
     }
 
     .envelope.is-fading {
-      animation: envGone .5s ease forwards
+      animation: envGone 1.3s cubic-bezier(.4, 0, .5, 1) forwards
     }
 
     .envelope.is-gone {
@@ -662,9 +662,14 @@
     }
 
     @keyframes envGone {
-      to {
+      0% {
+        opacity: 1;
+        transform: scale(1)
+      }
+
+      100% {
         opacity: 0;
-        transform: scale(1.08)
+        transform: scale(1.06)
       }
     }
 
@@ -1385,7 +1390,7 @@
           if (handed) return;
           handed = true;
           env.classList.add("is-fading");
-          setTimeout(finish, 700);
+          setTimeout(finish, 1300);
         }
         function open() {
           if (opened) return;
@@ -1397,7 +1402,7 @@
           if (p && p.catch) p.catch(function () { finish(); });
           film.addEventListener("ended", hand);
           film.addEventListener("timeupdate", function () {
-            if (film.duration && film.currentTime >= film.duration - 0.6) hand();
+            if (film.duration && film.currentTime >= film.duration - 1.35) hand();
           });
           setTimeout(hand, 9000);   // backstop if the file never reports progress
         }
