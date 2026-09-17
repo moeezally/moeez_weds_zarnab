@@ -1402,8 +1402,8 @@
           if (p && p.catch) p.catch(function () { finish(); });
           film.addEventListener("ended", hand);
           film.addEventListener("timeupdate", function () {
-            // 2.10s is where the seal reaches full size and the flaps begin to part
-            if (film.currentTime >= 2.1) hand();
+            // just before the seal reaches full size, as the flaps begin to part
+            if (film.currentTime >= 1.7) hand();
           });
           setTimeout(hand, 9000);   // backstop if the file never reports progress
         }
