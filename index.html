@@ -45,6 +45,7 @@
       --blush-3: #f9e9e1;
       --blush-4: #f4ddd3;
       --stone: #eaded0;
+      --gutter: clamp(20px, 6.5vw, 34px);
       --ink: #4b342d;
       --ink-soft: #7a5c52;
       --leaf: #6d7b56;
@@ -116,7 +117,7 @@
     .sec {
       position: relative;
       padding-block: 54px;
-      padding-inline: clamp(20px, 6.5vw, 34px)
+      padding-inline: var(--gutter)
     }
 
     .sec--invite {
@@ -249,7 +250,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding-top: 17%;
+      padding-top: 33%;
       text-align: center;
       pointer-events: none;
     }
@@ -621,7 +622,7 @@
     /* ---------- closing ---------- */
     .close {
       text-align: center;
-      padding-bottom: 26px
+      padding-bottom: 6px
     }
 
     .close__line {
@@ -642,9 +643,11 @@
 
     .close__band {
       display: block;
-      width: 100%;
+      width: calc(100% + var(--gutter) * 2);
+      max-width: none;
+      margin-inline: calc(var(--gutter) * -1);
       height: auto;
-      margin-top: 10px
+      margin-top: -6px
     }
 
     /* ---------- envelope ---------- */
@@ -1338,7 +1341,7 @@
           <p class="close__line">Hope to see you there!</p>
           <p class="close__names">Moeez &amp; Zarnab</p>
         </div>
-        <svg class="close__band" viewBox="0 0 462 150" id="closeBand" aria-hidden="true"></svg>
+        <svg class="close__band" viewBox="0 0 462 210" id="closeBand" aria-hidden="true"></svg>
       </section>
 
     </main>
@@ -1433,6 +1436,64 @@
         host.appendChild(g);
         return g;
       }
+      /* A garland rather than a scatter: foliage fans out along a soft
+         baseline, blooms sit on it largest-and-lowest first, and every leaf
+         leans with its side of the arc instead of spinning at random. */
+      function garland(host, W, H, seed) {
+        if (!host) return;
+        var r = rng(seed), i, x, y, lean, sz;
+        var BASE = H * 0.58;
+        function baseline(px) { return BASE + Math.sin(px / W * Math.PI * 2.1 + 0.6) * H * 0.075; }
+        function leanAt(px) { return (px - W / 2) / W * 116; }
+        var SOFT = [
+          '--p1:#f4e5d5;--p2:#e2cbb4;--p3:#c9ab8f',
+          '--p1:#e5ac9c;--p2:#cd8878;--p3:#a9635a',
+          '--p1:#c07a7f;--p2:#9c545c;--p3:#75383f',
+          '--p1:#a63a46;--p2:#7b2029;--p3:#54121a'
+        ];
+        var FOLIAGE = [
+          '--lf:#8a9a63;--lfv:#6c7a48', '--lf:#7f9d8e;--lfv:#5f7a6c',
+          '--lf:#9fae76;--lfv:#7b8a55', '--lf:#6f8354;--lfv:#54643e'
+        ];
+        var edge = 'stroke:rgba(84,32,40,.38);stroke-width:2.2;';
+
+        // 1. foliage, densest along the baseline and thinning upward
+        for (i = 0; i < 132; i++) {
+          x = -14 + r() * (W + 28);
+          var lift = Math.pow(r(), 1.7);
+          y = baseline(x) + H * 0.42 - lift * H * 0.92;
+          lean = leanAt(x) + (r() - 0.5) * 54;
+          sz = (34 - lift * 15) * (0.75 + r() * 0.5);
+          host.appendChild(use('leaf', x, y, sz, lean, pick(r, FOLIAGE)));
+        }
+
+        // 2. buds threaded between the leaves
+        for (i = 0; i < 34; i++) {
+          x = -10 + r() * (W + 20);
+          y = baseline(x) + (r() - 0.64) * H * 0.7;
+          host.appendChild(use('bud', x, y, 11 + r() * 9, leanAt(x) + (r() - 0.5) * 40, pick(r, SOFT)));
+        }
+
+        // 3. blooms: biggest sit lowest, so the band reads as weight not confetti
+        var slots = 17, gap = W / (slots - 1);
+        for (i = 0; i < slots; i++) {
+          x = i * gap + (r() - 0.5) * gap * 0.55;
+          var drop = r();
+          y = baseline(x) + H * 0.2 - drop * H * 0.58;
+          sz = 26 + (1 - drop) * 34 + r() * 10;
+          host.appendChild(use('rose', x, y, sz, r() * 360,
+            pick(r, SOFT) + ';' + edge));
+        }
+
+        // 4. a few cream daisies, echoing the film in the hero
+        for (i = 0; i < 26; i++) {
+          x = -8 + r() * (W + 16);
+          y = baseline(x) + (r() - 0.72) * H * 0.78;
+          host.appendChild(use('rose', x, y, 9 + r() * 7, r() * 360,
+            '--p1:#fffaf2;--p2:#f3e7d6;--p3:#e2b95f'));
+        }
+      }
+
 
       /* ---------- greenery climbing the arch ---------- */
       (function () {
@@ -1470,14 +1531,7 @@
         var tl = document.getElementById("cornerTL"), br = document.getElementById("cornerBR");
         if (tl) cluster(tl, 36, 34, 34, 5, 20, 34, 11, 53);
         if (br) cluster(br, 36, 34, 34, 5, 20, 34, 11, 67);
-
-        var band = document.getElementById("closeBand");
-        if (band) {
-          var xs = [26, 96, 168, 240, 312, 384, 446], j;
-          for (j = 0; j < xs.length; j++) {
-            cluster(band, xs[j], 96 + (j % 2) * 20, 56, 7, 28, 52, 13, 101 + j * 13);
-          }
-        }
+        garland(document.getElementById('closeBand'), 462, 210, 101);
       })();
 
       /* ---------- embossed florals on the envelope ---------- */
