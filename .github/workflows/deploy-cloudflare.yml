@@ -1,0 +1,24 @@
+# GitHub Pages and Vercel both rebuild from a push on their own. Cloudflare
+# does not, so without this it silently drifts behind the other two.
+name: Deploy to Cloudflare
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # only the files that ship; the repo also holds source .mov masters
+      - name: Assemble dist
+        run: ./build-dist.sh
+
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: 883e64f560bf4d3befd3e507c18baaba

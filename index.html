@@ -232,15 +232,15 @@
     /* ---------- hero ---------- */
     .hero {
       position: relative;
-      background: var(--stone);
+      /* frame one of the film: what shows until the film itself can play
+         through, so the handover is not a change of medium */
+      background: var(--stone) url(hero-still.jpg) center / cover no-repeat;
       padding: 0;
       isolation: isolate;
       aspect-ratio: 720 / 1280;
       overflow: hidden;
     }
 
-    /* the hand-drawn arch stays underneath: if the film cannot play
-       (old browser, blocked autoplay, missing file) the invitation still opens */
     .hero__video {
       position: absolute;
       inset: 0;
@@ -255,14 +255,6 @@
 
     .hero__video.is-live {
       opacity: 1;
-    }
-
-    .hero__art {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      width: 100%;
-      height: 100%;
     }
 
     .hero__copy {
@@ -913,38 +905,6 @@
       <header class="hero">
       <video class="hero__video" id="heroVideo" src="swanbg.mp4"
              loop muted playsinline preload="none" aria-hidden="true"></video>
-        <svg class="hero__art" viewBox="0 0 462 760" preserveAspectRatio="xMidYMid slice" role="img"
-          aria-label="An arched garden window looking onto a lake with two swans">
-          <rect width="462" height="760" fill="url(#stonegrad)" />
-          <rect width="462" height="760" fill="url(#carve)" opacity=".55" />
-          <path d="M44,760L44,280C44,172 106,88 231,44C356,88 418,172 418,280L418,760Z" fill="#d7c6b0" />
-          <path id="archIn" d="M58,760L58,285C58,182 116,104 231,63C346,104 404,182 404,285L404,760Z"
-            fill="url(#sky)" />
-          <path d="M44,760L44,280C44,172 106,88 231,44C356,88 418,172 418,280L418,760" fill="none" stroke="#b08355"
-            stroke-width="1.2" opacity=".75" />
-          <path d="M58,760L58,285C58,182 116,104 231,63C346,104 404,182 404,285L404,760" fill="none" stroke="#b08355"
-            stroke-width=".9" opacity=".5" />
-          <g transform="translate(0,100)">
-            <!-- distant shore -->
-            <path d="M58,566C110,552 150,560 196,556C240,552 280,562 330,554C364,549 384,558 404,554L404,600L58,600Z"
-              fill="#cfc3ae" opacity=".65" />
-            <path d="M58,572C96,566 128,574 168,570C206,566 236,574 276,569C320,564 360,572 404,566L404,600L58,600Z"
-              fill="#c3b6a0" opacity=".5" />
-            <!-- water -->
-            <path d="M58,578L404,578L404,660L58,660Z" fill="url(#water)" />
-            <g stroke="#f4e7db" stroke-width="1.4" opacity=".55" fill="none">
-              <path d="M92,600h52M300,594h60M120,624h74M268,632h78M180,650h96" />
-            </g>
-          </g>
-          <g id="swanHost" transform="translate(0,100)">
-            <g opacity=".22" filter="url(#soft)" transform="translate(0,1163) scale(1,-1)">
-              <use href="#swanpair" x="126" y="468" width="220" height="123" />
-            </g>
-            <use href="#swanpair" x="126" y="468" width="220" height="123" />
-          </g>
-          <g id="archVine"></g>
-          <g id="heroFlora" transform="translate(0,100)"></g>
-        </svg>
         <div class="hero__copy">
           <p class="hero__eyebrow">Shendi</p>
           <p class="hero__date">08.01.27</p>
@@ -1353,40 +1313,8 @@
         }
       }
 
-
-      /* ---------- greenery climbing the arch ---------- */
-      (function () {
-        var path = document.getElementById("archIn"), host = document.getElementById("archVine");
-        if (!path || !host || !path.getTotalLength) return;
-        var L = path.getTotalLength(), r = rng(7), pts = [], i, p;
-        for (i = 0; i <= 200; i++) {
-          p = path.getPointAtLength(i / 200 * L);
-          if (p.y < 330) pts.push({ x: p.x, y: p.y, t: i / 200 });
-        }
-        if (!pts.length) return;
-        for (i = 0; i < pts.length; i++) {
-          p = pts[i];
-          var vx = 231 - p.x, vy = 300 - p.y, m = Math.hypot(vx, vy) || 1;
-          var ix = p.x + vx / m * 7, iy = p.y + vy / m * 7;   // nudge inside the opening
-          if (i % 3 === 0) {
-            host.appendChild(use("leaf", ix, iy, 15 + r() * 9, r() * 360, pick(r, GREENS)));
-          }
-          if (i % 11 === 4) {
-            host.appendChild(use("rose", ix + (r() - 0.5) * 8, iy + (r() - 0.5) * 8,
-              13 + r() * 7, r() * 360, r() < 0.65 ? BLOOMS[3] : BLOOMS[2]));
-          }
-        }
-      })();
-
       /* ---------- floral corners ---------- */
       (function () {
-        var hero = document.getElementById("heroFlora");
-        if (hero) {
-          cluster(hero, 62, 616, 70, 8, 34, 58, 16, 11);
-          cluster(hero, 400, 616, 70, 8, 34, 58, 16, 23);
-          cluster(hero, 150, 654, 46, 5, 24, 40, 9, 31);
-          cluster(hero, 316, 654, 46, 5, 24, 40, 9, 47);
-        }
         var tl = document.getElementById("cornerTL"), br = document.getElementById("cornerBR");
         if (tl) cluster(tl, 36, 34, 34, 5, 20, 34, 11, 53);
         if (br) cluster(br, 36, 34, 34, 5, 20, 34, 11, 67);
