@@ -1,9 +1,11 @@
-# source footage — not needed by the published invite
-*.mov
-
-# the second invite, kept local for now
-shendi-invite.html
 
 # music source, only the cut loop ships
+# source footage — not needed by the published invite
+# the second invite, kept local for now
+*.mov
+.DS_Store
+.wrangler/
 audio.mp3
 dist/
+node_modules/
+shendi-invite.html

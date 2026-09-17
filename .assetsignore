@@ -1,0 +1,17 @@
+# Files present in the working tree or the clone that must not be served.
+# gitignore syntax. Kept correct for BOTH: the clone lacks the .mov masters,
+# a local checkout has them.
+.git/
+.github/
+.wrangler/
+node_modules/
+dist/
+.DS_Store
+.gitignore
+.assetsignore
+build-dist.sh
+wrangler.jsonc
+vercel.json
+*.mov
+audio.mp3
+shendi-invite.html

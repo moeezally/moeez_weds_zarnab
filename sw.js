@@ -7,10 +7,9 @@
  *
  * BUMP VERSION whenever a file in ASSETS changes, or guests keep the old one.
  */
-var VERSION = 'mz-2026-09-17c';
+var VERSION = 'mz-2026-09-17d';
 var ASSETS = [
   './',
-  './index.html',
   './opening-poster.jpg',
   './hero-still.jpg',
   './opening.mp4',
@@ -90,7 +89,7 @@ self.addEventListener('fetch', function (e) {
         return r;
       }).catch(function () {
         return caches.match(req).then(function (hit) {
-          return hit || caches.match('./index.html');
+          return hit || caches.match('./');
         });
       })
     );
