@@ -918,6 +918,82 @@
       }
     }
 
+    /* ---------- music ---------- */
+    .music-dock {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: var(--paper-w);
+      height: 100%;
+      pointer-events: none;
+      z-index: 6;
+    }
+
+    .music {
+      position: absolute;
+      right: 16px;
+      bottom: 18px;
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      cursor: pointer;
+      pointer-events: auto;
+      border: 1px solid rgba(255, 255, 255, .55);
+      border-radius: 50%;
+      color: var(--burgundy);
+      /* liquid glass: a thin lens of frosted light rather than a solid chip */
+      background:
+        linear-gradient(148deg, rgba(255, 252, 248, .5) 0%, rgba(255, 246, 238, .22) 46%, rgba(227, 178, 146, .2) 100%);
+      -webkit-backdrop-filter: blur(16px) saturate(175%);
+      backdrop-filter: blur(16px) saturate(175%);
+      box-shadow:
+        0 8px 24px rgba(43, 12, 18, .2),
+        0 1px 2px rgba(43, 12, 18, .12),
+        inset 0 1px 1px rgba(255, 255, 255, .9),
+        inset 0 -6px 10px rgba(176, 131, 85, .14);
+      transition: background .3s ease, box-shadow .3s ease, transform .3s cubic-bezier(.22, 1, .36, 1);
+    }
+
+    .music:hover {
+      transform: scale(1.07);
+      box-shadow:
+        0 10px 28px rgba(43, 12, 18, .26),
+        0 1px 2px rgba(43, 12, 18, .14),
+        inset 0 1px 1px rgba(255, 255, 255, 1),
+        inset 0 -6px 10px rgba(176, 131, 85, .18);
+    }
+
+    .music:active {
+      transform: scale(.96);
+    }
+
+    .music svg {
+      width: 19px;
+      height: 19px;
+      display: block;
+    }
+
+    .music__wave {
+      transition: opacity .2s ease;
+    }
+
+    .music__slash {
+      opacity: 0;
+      transition: opacity .2s ease;
+    }
+
+    .music.is-off .music__wave {
+      opacity: .25;
+    }
+
+    .music.is-off .music__slash {
+      opacity: 1;
+    }
+
     /* ---------- petals ---------- */
     #petals {
       position: fixed;
@@ -1355,6 +1431,21 @@
 
   <canvas id="petals" aria-hidden="true"></canvas>
 
+  <audio id="music" src="invite-music.m4a" loop preload="auto"></audio>
+  <div class="music-dock">
+    <button class="music is-off" id="musicBtn" type="button" aria-pressed="false" aria-label="Play music">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+        stroke-linejoin="round" aria-hidden="true">
+        <path d="M4 9.5h3.2L12 5.6v12.8L7.2 14.5H4z" fill="currentColor" stroke="none" />
+        <g class="music__wave">
+          <path d="M15.4 9.6a3.4 3.4 0 0 1 0 4.8" />
+          <path d="M17.9 7.1a7 7 0 0 1 0 9.8" />
+        </g>
+        <path class="music__slash" d="M15.6 9.6l5.2 4.8M20.8 9.6l-5.2 4.8" />
+      </svg>
+    </button>
+  </div>
+
   <!-- ============ ENVELOPE ============ -->
   <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Tap to open the invitation">
     <div class="env">
@@ -1707,6 +1798,72 @@
         ['click', 'touchstart', 'keydown'].forEach(function (e) {
           addEventListener(e, kick, { once: true, passive: true });
         });
+      })();
+
+      /* ---------- music ---------- */
+      (function () {
+        var audio = document.getElementById('music');
+        var btn = document.getElementById('musicBtn');
+        if (!audio || !btn) return;
+
+        var LEVEL = 0.55;   // never at full tilt — it plays under the invitation
+        var RAMP = 0.5;     // seconds of fade at the start and into the loop seam
+        var wanted = true;
+        try { wanted = localStorage.getItem('mz-music') !== 'off'; } catch (e) { }
+
+        function remember() {
+          try { localStorage.setItem('mz-music', wanted ? 'on' : 'off'); } catch (e) { }
+        }
+        function sync() {
+          var on = wanted && !audio.paused;
+          btn.classList.toggle('is-off', !on);
+          btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+          btn.setAttribute('aria-label', on ? 'Turn music off' : 'Turn music on');
+        }
+        function start() {
+          if (!wanted) return;
+          audio.volume = 0;
+          var p = audio.play();
+          if (p && p.catch) p.catch(function () { });
+        }
+
+        // the track is quiet at both ends, so a short ramp either side of the
+        // loop point hides the seam without a second element
+        function level() {
+          if (!audio.paused) {
+            var t = audio.currentTime, d = audio.duration || 24.15, v = LEVEL;
+            if (t < RAMP) v = LEVEL * (t / RAMP);
+            else if (d - t < RAMP) v = LEVEL * ((d - t) / RAMP);
+            audio.volume = Math.max(0, Math.min(1, v));
+          }
+          requestAnimationFrame(level);
+        }
+        requestAnimationFrame(level);
+
+        audio.addEventListener('play', sync);
+        audio.addEventListener('pause', sync);
+
+        btn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          wanted = !wanted;
+          if (wanted) start(); else audio.pause();
+          remember(); sync();
+        });
+
+        // browsers only allow sound after a gesture — opening the envelope is one
+        ['click', 'touchstart', 'keydown'].forEach(function (ev) {
+          addEventListener(ev, function once() {
+            removeEventListener(ev, once);
+            start();
+          }, { passive: true });
+        });
+
+        document.addEventListener('visibilitychange', function () {
+          if (document.hidden) audio.pause();
+          else if (wanted) start();
+        });
+
+        sync();
       })();
 
     })();
