@@ -1532,7 +1532,19 @@
               if (!btn) return;
 
               var LEVEL = 0.55;
-              var XFADE = 1.4;        // seconds each pass overlaps the next
+                var XFADE = 3.0;        // seconds each pass overlaps the next
+
+                // Equal-power curves. A linear crossfade sums to roughly 0.7 at its
+                // midpoint when the two sides do not correlate — an audible dip, and
+                // that dip is what announces the loop. sin/cos hold constant power
+                // instead, so the level never sags through the join.
+                var CURVE = 256;
+                var fadeIn = new Float32Array(CURVE), fadeOut = new Float32Array(CURVE);
+                for (var ci = 0; ci < CURVE; ci++) {
+                  var ct = ci / (CURVE - 1);
+                  fadeIn[ci] = Math.sin(ct * Math.PI / 2);
+                  fadeOut[ci] = Math.cos(ct * Math.PI / 2);
+                }
               var wanted = true;
               try { wanted = localStorage.getItem('mz-music') !== 'off'; } catch (e) { }
 
@@ -1554,13 +1566,15 @@
                 var g = ctx.createGain();
                 src.connect(g); g.connect(master);
                 var d = buffer.duration;
-                g.gain.setValueAtTime(0.0001, when);
-                g.gain.linearRampToValueAtTime(1, when + XFADE);
-                g.gain.setValueAtTime(1, when + d - XFADE);
-                g.gain.linearRampToValueAtTime(0.0001, when + d);
+                var xf = Math.min(XFADE, d / 2 - 0.05);
+                // no setValueAtTime here: an event at the curve's own start
+                // time can make setValueCurveAtTime throw, and the curve already
+                // begins at zero
+                g.gain.setValueCurveAtTime(fadeIn, when, xf);
+                g.gain.setValueCurveAtTime(fadeOut, when + d - xf, xf);
                 src.start(when);
                 src.stop(when + d + 0.1);
-                nextAt = when + d - XFADE;
+                nextAt = when + d - xf;
               }
 
               function pumpAhead() {
