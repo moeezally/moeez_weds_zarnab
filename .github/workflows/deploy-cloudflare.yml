@@ -1,10 +1,11 @@
-# GitHub Pages and Vercel both rebuild from a push on their own. Cloudflare
-# does not, so without this it silently drifts behind the other two.
-name: Deploy to Cloudflare
+# Cloudflare now builds this repo itself through its dashboard git
+# integration, so this no longer runs on push — it would only duplicate
+# that deploy, and fails red without a token. Kept as a manual fallback:
+# run it from the Actions tab if the dashboard integration ever breaks.
+# Needs a CLOUDFLARE_API_TOKEN repository secret to work.
+name: Deploy to Cloudflare (manual fallback)
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 jobs:
