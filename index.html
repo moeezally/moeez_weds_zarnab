@@ -22,6 +22,7 @@
 
 <body>
   <title>Moeez &amp; Zarnab</title>
+  <link rel="preload" as="image" href="opening-poster.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet"
@@ -1392,19 +1393,49 @@
           env.classList.add("is-fading");
           setTimeout(finish, 2300);
         }
+        // A guest spends a few seconds looking at the seal before tapping. Spend
+        // them fetching the hero. Starting it on tap instead makes it compete
+        // with the film that is playing right then, and the film stutters.
+        var hv = document.getElementById("heroVideo");
+        var warmed = false, warming = false;
+        function playHero() {
+          if (!hv || !warmed) return;
+          var p = hv.play();
+          if (p && p.catch) p.catch(function () { });
+        }
+        function warmHero() {
+          if (warmed || !hv) return;
+          warmed = true;
+          hv.preload = "auto";
+          try { hv.load(); } catch (e) { }
+          if (opened) playHero();
+        }
+        // The music is wanted the instant the seal is tapped; the hero is not
+        // needed until the dissolve ends about two seconds later, and the
+        // hand-drawn scene stands in for it until it arrives. So the music
+        // gets the pipe first — fetching the hero ahead of it is what makes a
+        // tap land in silence.
+        function warmRest() {
+          if (warming) return;
+          warming = true;
+          var m = window.__warmMusic ? window.__warmMusic() : null;
+          if (m && m.then) m.then(warmHero, warmHero); else warmHero();
+          setTimeout(warmHero, 6000);   // a stalled music fetch must not pin the hero
+        }
+        if (film) {
+          // deferred a tick: the music module below has not defined its hook yet
+          if (film.readyState >= 4) setTimeout(warmRest, 0);
+          else film.addEventListener("canplaythrough", warmRest, { once: true });
+          setTimeout(warmRest, 4000);   // a film that never reports ready must not pin the rest
+        }
+
         function open() {
           if (opened) return;
           opened = true;
           if (reduce || !film) { finish(); return; }
           env.classList.add("is-opening");
-          // now the opening film has the screen, let the hero load behind it
-          var hv = document.getElementById("heroVideo");
-          if (hv) {
-            hv.preload = "auto";
-            try { hv.load(); } catch (e) { }
-            var hp = hv.play();
-            if (hp && hp.catch) hp.catch(function () { });
-          }
+          warmRest();                   // in case the tap beat the film being ready
+          playHero();
           var p = film.play();
           // never trap a guest behind a film that will not play
           if (p && p.catch) p.catch(function () { finish(); });
@@ -1521,20 +1552,45 @@
         requestAnimationFrame(frame);
       })();
 
+      /* ---------- keep our own copy; the host expires its cache every 10 min ---------- */
+      if ('serviceWorker' in navigator) {
+        addEventListener('load', function () {
+          navigator.serviceWorker.register('sw.js').catch(function () { });
+        });
+      }
+
       /* ---------- the swan film ---------- */
       (function () {
         var v = document.getElementById('heroVideo');
         if (!v) return;
         function live() { v.classList.add('is-live'); }
-        v.addEventListener('playing', live);
-        if (!v.paused && !v.ended && v.readyState > 2) live();
+        // Cross over to the film only once it can run to the end without
+        // stalling. Until then the drawn scene behind it is the better
+        // picture — a frozen video frame is not.
+        v.addEventListener('canplaythrough', live);
+        v.addEventListener('playing', function () {
+          if (v.readyState >= 4) live();
+          // backstop: some browsers are shy about canplaythrough
+          else setTimeout(function () { if (!v.paused) live(); }, 2500);
+        });
+        if (v.readyState >= 4) live();
+        // The envelope owns when this file is allowed to download. play() on a
+        // preload="none" element starts fetching it immediately, which is what
+        // used to push the music out of its place in the queue.
         var kick = function () {
+          if (v.preload === 'none') return;
           var p = v.play();
           if (p && p.catch) p.catch(function () { });
         };
         kick();
+        v.addEventListener('canplay', kick);
         ['click', 'touchstart', 'keydown'].forEach(function (e) {
-          addEventListener(e, kick, { once: true, passive: true });
+          addEventListener(e, kick, { passive: true });
+        });
+        v.addEventListener('playing', function () {
+          ['click', 'touchstart', 'keydown'].forEach(function (e) {
+            removeEventListener(e, kick);
+          });
         });
       })();
 
@@ -1560,6 +1616,21 @@
                 }
               var wanted = true;
               try { wanted = localStorage.getItem('mz-music') !== 'off'; } catch (e) { }
+
+              // Pull the bytes down while the guest is still looking at the
+              // seal, so the tap only has to decode them. The AudioContext is
+              // still created inside the gesture — one created outside a
+              // gesture can refuse to ever run on iOS.
+              var bytes = null;
+              function prefetch() {
+                if (!bytes) {
+                  bytes = fetch('invite-music.m4a').then(function (r) { return r.arrayBuffer(); });
+                }
+                return bytes;
+              }
+              window.__warmMusic = function () {
+                return wanted ? prefetch() : Promise.resolve();
+              };
 
               var ctx = null, buffer = null, master = null;
               var nextAt = 0, pump = null, started = false, viaElement = false;
@@ -1607,11 +1678,10 @@
                 master = ctx.createGain();
                 master.gain.value = wanted ? LEVEL : 0.0001;
                 master.connect(ctx.destination);
-                return fetch('invite-music.m4a')
-                  .then(function (r) { return r.arrayBuffer(); })
+                return prefetch()
                   .then(function (b) {
                     return new Promise(function (res, rej) {
-                      var out = ctx.decodeAudioData(b, res, rej);
+                      var out = ctx.decodeAudioData(b.slice(0), res, rej);
                       if (out && out.then) out.then(res, rej);
                     });
                   })
