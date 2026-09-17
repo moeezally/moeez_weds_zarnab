@@ -23,10 +23,30 @@
 <body>
   <title>Moeez &amp; Zarnab</title>
   <link rel="preload" as="image" href="opening-poster.jpg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Italianno&display=swap">
+  <link rel="preload" as="font" type="font/woff2" href="fonts/cormorant-normal.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="fonts/italianno-normal.woff2" crossorigin>
+  <style>
+    /* Self-hosted. Google Fonts cost two extra origins before any text could
+       paint — DNS, TCP and TLS to fonts.googleapis.com for the stylesheet,
+       then the same again to fonts.gstatic.com for the files — and a
+       render-blocking request on the far side of both. */
+    @font-face {
+      font-family: "Cinzel"; font-style: normal; font-weight: 400 500;
+      font-display: swap; src: url(fonts/cinzel-normal.woff2) format("woff2");
+    }
+    @font-face {
+      font-family: "Cormorant"; font-style: normal; font-weight: 300 600;
+      font-display: swap; src: url(fonts/cormorant-normal.woff2) format("woff2");
+    }
+    @font-face {
+      font-family: "Cormorant"; font-style: italic; font-weight: 300 400;
+      font-display: swap; src: url(fonts/cormorant-italic.woff2) format("woff2");
+    }
+    @font-face {
+      font-family: "Italianno"; font-style: normal; font-weight: 400;
+      font-display: swap; src: url(fonts/italianno-normal.woff2) format("woff2");
+    }
+  </style>
   <style>
     :root {
       --oxblood: #2b0c12;

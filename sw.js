@@ -7,14 +7,18 @@
  *
  * BUMP VERSION whenever a file in ASSETS changes, or guests keep the old one.
  */
-var VERSION = 'mz-2026-09-17a';
+var VERSION = 'mz-2026-09-17b';
 var ASSETS = [
   './',
   './index.html',
   './opening-poster.jpg',
   './opening.mp4',
   './swanbg.mp4',
-  './invite-music.m4a'
+  './invite-music.m4a',
+  './fonts/cinzel-normal.woff2',
+  './fonts/cormorant-normal.woff2',
+  './fonts/cormorant-italic.woff2',
+  './fonts/italianno-normal.woff2'
 ];
 
 self.addEventListener('install', function (e) {
