@@ -891,7 +891,7 @@
       <!-- ============ HERO ============ -->
       <header class="hero">
       <video class="hero__video" id="heroVideo" src="swanbg.mp4"
-             autoplay loop muted playsinline preload="auto" aria-hidden="true"></video>
+             loop muted playsinline preload="none" aria-hidden="true"></video>
         <svg class="hero__art" viewBox="0 0 462 760" preserveAspectRatio="xMidYMid slice" role="img"
           aria-label="An arched garden window looking onto a lake with two swans">
           <rect width="462" height="760" fill="url(#stonegrad)" />
@@ -1186,7 +1186,7 @@
 
   <canvas id="petals" aria-hidden="true"></canvas>
 
-  <audio id="music" src="invite-music.m4a" loop preload="auto"></audio>
+  <audio id="music" src="invite-music.m4a" loop preload="none"></audio>
   <div class="music-dock">
     <button class="music is-off" id="musicBtn" type="button" aria-pressed="false" aria-label="Play music">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
@@ -1397,6 +1397,14 @@
           opened = true;
           if (reduce || !film) { finish(); return; }
           env.classList.add("is-opening");
+          // now the opening film has the screen, let the hero load behind it
+          var hv = document.getElementById("heroVideo");
+          if (hv) {
+            hv.preload = "auto";
+            try { hv.load(); } catch (e) { }
+            var hp = hv.play();
+            if (hp && hp.catch) hp.catch(function () { });
+          }
           var p = film.play();
           // never trap a guest behind a film that will not play
           if (p && p.catch) p.catch(function () { finish(); });
@@ -1489,6 +1497,11 @@
         for (i = 0; i < 17; i++) petals.push(make(true));
         window.addEventListener("resize", resize);
         function frame() {
+          // nothing is visible behind the envelope; skip the work until it lifts
+          if (document.documentElement.classList.contains("is-sealed")) {
+            requestAnimationFrame(frame);
+            return;
+          }
           ctx.clearRect(0, 0, W, H);
           for (i = 0; i < petals.length; i++) {
             var p = petals[i];
@@ -1587,6 +1600,10 @@
                 var AC = window.AudioContext || window.webkitAudioContext;
                 if (!AC) return Promise.reject(new Error('no web audio'));
                 ctx = new AC();
+                // iOS and Android start a context suspended. resume() has to be
+                // called while the gesture is still live — by the time the fetch
+                // and decode below finish, it no longer counts as one.
+                if (ctx.state === 'suspended' && ctx.resume) ctx.resume();
                 master = ctx.createGain();
                 master.gain.value = wanted ? LEVEL : 0.0001;
                 master.connect(ctx.destination);
@@ -1603,6 +1620,15 @@
                     nextAt = ctx.currentTime + 0.06;
                     schedule(nextAt);
                     pump = setInterval(pumpAhead, 500);
+                    if (ctx.state === 'suspended' && ctx.resume) ctx.resume();
+                    // if the context still refuses to run, the element can
+                    setTimeout(function () {
+                      if (ctx && ctx.state !== 'running') {
+                        if (pump) { clearInterval(pump); pump = null; }
+                        ctx = null; master = null; buffer = null;
+                        viaPlainElement();
+                      }
+                    }, 400);
                     sync(wanted);
                   });
               }
