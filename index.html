@@ -46,6 +46,7 @@
       --blush-4: #f4ddd3;
       --stone: #eaded0;
       --gutter: clamp(20px, 6.5vw, 34px);
+      --paper-w: 462px;
       --ink: #4b342d;
       --ink-soft: #7a5c52;
       --leaf: #6d7b56;
@@ -107,7 +108,7 @@
     .paper {
       outline: none;
       width: 100%;
-      max-width: 462px;
+      max-width: var(--paper-w);
       position: relative;
       overflow: hidden;
       background: var(--cream);
@@ -920,9 +921,14 @@
     /* ---------- petals ---------- */
     #petals {
       position: fixed;
-      inset: 0;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: var(--paper-w);
+      height: 100%;
       z-index: 5;
-      pointer-events: none
+      pointer-events: none;
     }
 
     @media (prefers-reduced-motion:reduce) {
