@@ -13,12 +13,34 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # only the files that ship; the repo also holds source .mov masters
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check the deploy token is present
+        env:
+          TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::error::CLOUDFLARE_API_TOKEN repository secret is not set."
+            echo "Create a token with the 'Edit Cloudflare Workers' template at"
+            echo "https://dash.cloudflare.com/profile/api-tokens then add it at"
+            echo "Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+
+      # only the files that ship; the repo also holds the source .mov masters
       - name: Assemble dist
         run: ./build-dist.sh
 
-      - name: Deploy to Cloudflare Workers
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: 883e64f560bf4d3befd3e507c18baaba
+      # installed explicitly: the wrangler-action's npx shim cannot install
+      # non-interactively and silently falls back to a wrangler too old to
+      # understand an assets-only Worker
+      - name: Install wrangler
+        run: npm install --no-save wrangler@4
+
+      - name: Deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: 883e64f560bf4d3befd3e507c18baaba
+        run: npx wrangler deploy
