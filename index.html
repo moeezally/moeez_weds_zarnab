@@ -1444,6 +1444,7 @@
         var r = rng(seed), i, x, y, lean, sz;
         var BASE = H * 0.58;
         function baseline(px) { return BASE + Math.sin(px / W * Math.PI * 2.1 + 0.6) * H * 0.075; }
+        function tuck(py, s) { return Math.max(py, s * 0.54 + 1); }
         function leanAt(px) { return (px - W / 2) / W * 116; }
         var SOFT = [
           '--p1:#f4e5d5;--p2:#e2cbb4;--p3:#c9ab8f',
@@ -1464,14 +1465,15 @@
           y = baseline(x) + H * 0.42 - lift * H * 0.92;
           lean = leanAt(x) + (r() - 0.5) * 54;
           sz = (34 - lift * 15) * (0.75 + r() * 0.5);
-          host.appendChild(use('leaf', x, y, sz, lean, pick(r, FOLIAGE)));
+          host.appendChild(use('leaf', x, tuck(y, sz), sz, lean, pick(r, FOLIAGE)));
         }
 
         // 2. buds threaded between the leaves
         for (i = 0; i < 34; i++) {
           x = -10 + r() * (W + 20);
           y = baseline(x) + (r() - 0.64) * H * 0.7;
-          host.appendChild(use('bud', x, y, 11 + r() * 9, leanAt(x) + (r() - 0.5) * 40, pick(r, SOFT)));
+          sz = 11 + r() * 9;
+          host.appendChild(use('bud', x, tuck(y, sz), sz, leanAt(x) + (r() - 0.5) * 40, pick(r, SOFT)));
         }
 
         // 3. blooms: biggest sit lowest, so the band reads as weight not confetti
@@ -1481,7 +1483,7 @@
           var drop = r();
           y = baseline(x) + H * 0.2 - drop * H * 0.58;
           sz = 26 + (1 - drop) * 34 + r() * 10;
-          host.appendChild(use('rose', x, y, sz, r() * 360,
+          host.appendChild(use('rose', x, tuck(y, sz), sz, r() * 360,
             pick(r, SOFT) + ';' + edge));
         }
 
@@ -1489,7 +1491,8 @@
         for (i = 0; i < 26; i++) {
           x = -8 + r() * (W + 16);
           y = baseline(x) + (r() - 0.72) * H * 0.78;
-          host.appendChild(use('rose', x, y, 9 + r() * 7, r() * 360,
+          sz = 9 + r() * 7;
+          host.appendChild(use('rose', x, tuck(y, sz), sz, r() * 360,
             '--p1:#fffaf2;--p2:#f3e7d6;--p3:#e2b95f'));
         }
       }
