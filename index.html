@@ -788,27 +788,6 @@
       pointer-events: none
     }
 
-    /* light escaping the seam as the flaps part */
-    .env__seam {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 30%;
-      height: 84%;
-      margin-left: -15%;
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(-50%) scaleX(.08) scaleY(.2);
-      background: radial-gradient(50% 50% at 50% 50%,
-          rgba(255, 250, 236, 1) 0%,
-          rgba(255, 230, 176, .9) 24%,
-          rgba(255, 198, 112, .5) 52%,
-          rgba(250, 172, 74, .16) 76%,
-          rgba(240, 150, 60, 0) 100%);
-      mix-blend-mode: screen;
-      filter: blur(11px);
-    }
-
     /* the warm wash that makes the embossed roses catch the light */
     .env__lit {
       position: absolute;
@@ -935,10 +914,6 @@
       animation: linesGo .45s ease .08s forwards
     }
 
-    .is-opening .env__seam {
-      animation: seam 1.5s cubic-bezier(.35, 0, .2, 1) .1s forwards
-    }
-
     .is-opening .env__lit {
       animation: lit 1.7s ease-out .14s forwards
     }
@@ -1022,26 +997,6 @@
     @keyframes linesGo {
       to {
         opacity: 0
-      }
-    }
-
-    @keyframes seam {
-      0% {
-        opacity: 0;
-        transform: translateY(-50%) scaleX(.08) scaleY(.18)
-      }
-
-      16% {
-        opacity: 1
-      }
-
-      55% {
-        transform: translateY(-50%) scaleX(.55) scaleY(1)
-      }
-
-      100% {
-        opacity: .9;
-        transform: translateY(-50%) scaleX(1.25) scaleY(1.3)
       }
     }
 
@@ -1664,7 +1619,6 @@
         <path d="M0,0L200,416L400,0M0,800L200,416L400,800" fill="none" stroke="#e3b292" stroke-width="1.4" opacity=".45"
           vector-effect="non-scaling-stroke" />
       </svg>
-      <div class="env__seam"></div>
       <div class="env__rays"></div>
       <div class="env__burst"></div>
       <button class="seal seal--gold env__seal" id="openSeal" aria-label="Open the invitation">
