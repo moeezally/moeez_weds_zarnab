@@ -22,7 +22,7 @@
 
 <body>
   <title>Moeez &amp; Zarnab</title>
-  <link rel="preload" as="image" href="opening-poster.jpg">
+  <link rel="preload" as="image" href="opening-poster.png">
   <link rel="preload" as="font" type="font/woff2" href="fonts/cormorant-normal.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="fonts/italianno-normal.woff2" crossorigin>
   <style>
@@ -58,20 +58,20 @@
       --rosegold: #e3b292;
       --rosegold-lit: #f6d7be;
       --rosegold-dim: #c9906c;
-      --gold: #b08355;
-      --gold-dim: #8d6741;
-      --cream: #fcf3ec;
-      --blush: #f7e2d8;
-      --blush-2: #fbefe7;
-      --blush-3: #f9e9e1;
-      --blush-4: #f4ddd3;
-      --stone: #eaded0;
+      --gold: #b99a80;
+      --gold-dim: #8f6f58;
+      --cream: #efe7db;
+      --blush: #e6dacb;
+      --blush-2: #f3ece1;
+      --blush-3: #ece1d4;
+      --blush-4: #e3d6c6;
+      --stone: #e0d4c4;
       --gutter: clamp(20px, 6.5vw, 34px);
       --paper-w: 462px;
-      --ink: #4b342d;
-      --ink-soft: #7a5c52;
-      --leaf: #6d7b56;
-      --leaf-dim: #8e9b74;
+      --ink: #4a3a36;
+      --ink-soft: #7a645d;
+      --leaf: #7b8468;
+      --leaf-dim: #98a083;
       --script: "Italianno", "Snell Roundhand", "Apple Chancery", cursive;
       --serif: "Cormorant", "Cormorant Garamond", Garamond, Georgia, serif;
       --caps: "Cinzel", "Trajan Pro", Georgia, serif;
@@ -191,7 +191,7 @@
       color: var(--burgundy);
       text-align: center;
       text-wrap: balance;
-      background: linear-gradient(96deg, #8d6741, #6b1524 35%, #a06a46 70%, #6b1524);
+      background: linear-gradient(96deg, #6b1524, #6b1524);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
@@ -272,6 +272,7 @@
     .hero__eyebrow {
       font-family: var(--script);
       font-size: clamp(29px, 8vw, 35px);
+      font-weight: 500;
       color: var(--claret);
       margin: 0;
       line-height: 1.2;
@@ -284,6 +285,7 @@
       margin: 2px 0 0;
       font-variant-numeric: tabular-nums;
       font-family: var(--caps);
+      font-weight: 500;
     }
 
     .hero__names {
@@ -294,6 +296,7 @@
     .hero__name {
       font-family: var(--script);
       font-size: clamp(56px, 16.4vw, 76px);
+      font-weight: 500;
       line-height: 1.02;
       display: block
     }
@@ -541,9 +544,10 @@
 
     .place__art {
       display: block;
-      width: 100%;
       height: auto;
-      margin: 22px 0 4px
+      margin: 22px calc(-1 * var(--gutter)) 4px;
+      width: calc(100% + 2 * var(--gutter));
+      max-width: none
     }
 
     .btn {
@@ -554,7 +558,7 @@
       padding: 11px 22px;
       border: 1px solid var(--gold);
       border-radius: 2px;
-      background: linear-gradient(180deg, rgba(255, 255, 255, .5), rgba(227, 178, 146, .22));
+      background: linear-gradient(180deg, rgba(255, 255, 255, .5), rgba(201, 169, 143, .22));
       color: var(--gold-dim);
       font-family: var(--caps);
       font-size: 10.5px;
@@ -563,6 +567,29 @@
       text-decoration: none;
       cursor: pointer;
       transition: background .25s ease, color .25s ease;
+    }
+
+    .btns {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      max-width: 400px;
+      margin: 16px auto 0
+    }
+
+    .btns .btn {
+      margin-top: 0;
+      justify-content: center;
+      text-align: center;
+      padding-inline: 10px;
+      white-space: nowrap;
+      font-weight: inherit
+    }
+
+    @media (max-width: 340px) {
+      .btns {
+        grid-template-columns: 1fr
+      }
     }
 
     .btn:hover {
@@ -581,7 +608,7 @@
     /* ---------- closing ---------- */
     .close {
       text-align: center;
-      padding-bottom: 6px
+      padding-bottom: 20px
     }
 
     .close__line {
@@ -631,6 +658,21 @@
       max-width: var(--paper-w);
       height: 100%;
       overflow: hidden;
+      background: #e6dccf;
+    }
+
+    /* iOS drops a video's poster the moment play() is called, then paints
+       nothing until the first frame decodes — the oxblood backdrop showed
+       through as a black flash. This copy of the first frame sits over the
+       film, sized and zoomed identically, and is only removed once the film
+       has actually painted. */
+    .env__poster {
+      z-index: 1;
+      pointer-events: none
+    }
+
+    .env__poster.is-off {
+      visibility: hidden
     }
 
     .env__film {
@@ -941,7 +983,7 @@
       <section class="sec sec--invite">
         <svg class="torn" viewBox="0 0 462 18" preserveAspectRatio="none" aria-hidden="true">
           <path d="M0,18L0,8C46,2 84,13 130,9C176,5 214,14 260,10C306,6 344,15 390,10C420,7 442,12 462,7L462,18Z"
-            fill="#fbefe7" />
+            fill="#f3ece1" />
         </svg>
         <div class="invite-card">
           <svg class="invite-card__corner invite-card__corner--tl" viewBox="0 0 120 120" id="cornerTL"
@@ -959,7 +1001,7 @@
       <section class="sec sec--count">
         <svg class="torn" viewBox="0 0 462 18" preserveAspectRatio="none" aria-hidden="true">
           <path d="M0,18L0,9C40,3 78,12 124,8C172,4 206,13 254,9C300,5 340,14 388,9C418,6 440,11 462,6L462,18Z"
-            fill="#f7e2d8" />
+            fill="#e6dacb" />
         </svg>
         <h2 class="h-sec">The Celebration Begins In</h2>
         <div class="count" id="count" aria-live="off">
@@ -981,7 +1023,7 @@
       <section class="sec sec--sched">
         <svg class="torn" viewBox="0 0 462 18" preserveAspectRatio="none" aria-hidden="true">
           <path d="M0,18L0,7C44,13 76,3 122,8C170,13 202,4 250,9C296,14 338,5 386,10C416,13 440,8 462,11L462,18Z"
-            fill="#fcf3ec" />
+            fill="#efe7db" />
         </svg>
         <h2 class="h-sec">Schedule of Events</h2>
         <svg class="flourish" viewBox="0 0 132 13" aria-hidden="true">
@@ -990,7 +1032,7 @@
         <div class="sched">
           <svg class="sched__rose" id="schedRose" viewBox="0 0 100 100" aria-hidden="true">
             <use href="#rose" x="0" y="0" width="100" height="100"
-              style="--p1:#c98d8d;--p2:#a86767;--p3:#7d4444" />
+              style="--p1:#c9a98f;--p2:#a98468;--p3:#7d4a3e" />
           </svg>
           <div class="sched__row">
             <div class="sched__time">5 PM</div>
@@ -1024,7 +1066,7 @@
       <section class="sec sec--place">
         <svg class="torn" viewBox="0 0 462 18" preserveAspectRatio="none" aria-hidden="true">
           <path d="M0,18L0,10C42,4 80,13 126,9C174,5 208,14 256,10C302,6 342,15 390,10C420,7 442,12 462,8L462,18Z"
-            fill="#f7e2d8" />
+            fill="#e6dacb" />
         </svg>
         <div class="place">
           <h2 class="h-sec">Location</h2>
@@ -1036,62 +1078,85 @@
           <p class="place__addr">Royal Oaks Cricket Ground, Green Acres Main Blvd, Green Acres Extension, Gul Nishan
             Society, Lahore, Pakistan</p>
           <svg class="place__art" viewBox="0 0 400 224" role="img"
-            aria-label="Illustration of Royal Oaks Farmhouse, a tile-roofed hall with an arcade of arched windows, strung with lights">
-            <rect width="400" height="224" fill="none" />
-            <ellipse cx="200" cy="200" rx="186" ry="17" fill="#e0cdbb" opacity=".55" />
-            <g fill="#5f7050">
-              <path d="M332,190C326,160 328,118 336,92C344,118 346,160 340,190Z" />
-              <path d="M360,190C355,166 357,132 364,110C371,132 373,166 368,190Z" />
+            aria-label="Illustration of a farmhouse venue: a small barn and windmill on rolling fields, with hay bales, a wooden fence and an oak hung with fairy lights">
+            <defs>
+              <radialGradient id="farmGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0" stop-color="#f7ecd8" stop-opacity=".95" />
+                <stop offset="1" stop-color="#f7ecd8" stop-opacity="0" />
+              </radialGradient>
+            </defs>
+            <circle cx="230" cy="104" r="120" fill="url(#farmGlow)" />
+            <circle cx="230" cy="112" r="20" fill="#f3dfc3" opacity=".8" />
+            <!-- birds -->
+            <g fill="none" stroke="#9a8a7c" stroke-width="1.1" stroke-linecap="round">
+              <path d="M150,48q5,-5 10,0q5,-5 10,0" /><path d="M184,34q4,-4 8,0q4,-4 8,0" /><path d="M120,66q4,-4 8,0q4,-4 8,0" />
             </g>
-            <path d="M44,74L74,52L318,52L318,74Z" fill="#b4785c" />
-            <path d="M44,74L318,74L318,82L44,82Z" fill="#a06a50" />
-            <rect x="50" y="82" width="262" height="108" fill="#eadcc6" />
-            <rect x="50" y="82" width="262" height="108" fill="none" stroke="#c8b295" stroke-width="1" />
-            <g fill="#c9b79c">
-              <rect x="70" y="96" width="22" height="24" />
-              <rect x="112" y="96" width="22" height="24" />
-              <rect x="154" y="96" width="22" height="24" />
-              <rect x="196" y="96" width="22" height="24" />
-              <rect x="238" y="96" width="22" height="24" />
-              <rect x="280" y="96" width="22" height="24" />
+            <!-- hills -->
+            <path d="M0,128C50,108 100,112 150,122C210,134 270,106 330,112C360,116 385,124 400,122L400,224L0,224Z" fill="#cfd1bb" />
+            <path d="M0,142C60,128 120,134 190,144C250,152 320,128 400,138L400,224L0,224Z" fill="#b9bea2" />
+            <path d="M0,160C70,148 140,158 210,164C280,170 340,152 400,158L400,224L0,224Z" fill="#a7ae8d" />
+            <!-- crop rows -->
+            <g fill="none" stroke="#97a07d" stroke-width="1" opacity=".7">
+              <path d="M150,170C190,160 260,172 330,160" /><path d="M140,178C190,168 270,182 350,168" />
+              <path d="M130,188C190,176 280,194 370,176" />
             </g>
-            <text x="181" y="142" text-anchor="middle" font-family="Cinzel, Georgia, serif" font-size="12"
-              letter-spacing="2.2" fill="#7a5c42">ROYAL OAKS</text>
-            <g fill="#cdbb9f">
-              <path d="M64,190L64,170A17,17 0 0 1 98,170L98,190Z" />
-              <path d="M110,190L110,170A17,17 0 0 1 144,170L144,190Z" />
-              <path d="M156,190L156,170A17,17 0 0 1 190,170L190,190Z" />
-              <path d="M202,190L202,170A17,17 0 0 1 236,170L236,190Z" />
-              <path d="M248,190L248,170A17,17 0 0 1 282,170L282,190Z" />
+            <!-- silo and barn -->
+            <rect x="92" y="108" width="14" height="38" fill="#e4d8c6" />
+            <path d="M92,108A7,7 0 0 1 106,108Z" fill="#a9937c" />
+            <path d="M38,148L38,124L62,108L86,124L86,148Z" fill="#8c4a4e" />
+            <path d="M32,126L62,104L92,126" fill="none" stroke="#6f3a40" stroke-width="3" stroke-linejoin="round" />
+            <rect x="52" y="130" width="20" height="18" fill="#efe7db" />
+            <path d="M52,130L72,148M72,130L52,148" stroke="#8c4a4e" stroke-width="1.6" />
+            <rect x="52" y="130" width="20" height="18" fill="none" stroke="#6f3a40" stroke-width="1.6" />
+            <rect x="58" y="116" width="8" height="7" fill="#f1d9a8" />
+            <!-- windmill -->
+            <g transform="translate(-128,6)">
+            <path d="M306,150L309,86L315,86L318,150Z" fill="#c4b49e" />
+            <g stroke="#a9937c" stroke-width="2.4" stroke-linecap="round"><path d="M312,84L322.3,55.8" /><path d="M312,84L340.2,94.3" /><path d="M312,84L301.7,112.2" /><path d="M312,84L283.8,73.7" /></g>
+            <circle cx="312" cy="84" r="3.4" fill="#6f3a40" />
             </g>
-            <g fill="#6d7b56">
-              <circle cx="32" cy="150" r="24" />
-              <circle cx="18" cy="164" r="15" />
-              <circle cx="46" cy="166" r="14" />
-              <rect x="30" y="168" width="4" height="24" fill="#7a5c42" />
+            <!-- winding path -->
+            <path d="M184,224C176,206 200,196 214,186C228,176 214,168 226,160C232,156 240,154 246,152L250,154C244,158 238,162 236,168C226,184 242,190 228,200C220,208 232,216 238,224Z" fill="#e0d3bf" />
+            <!-- fence -->
+            <g fill="#a98b72"><rect x="14" y="176" width="4" height="22" rx="1" /><rect x="52" y="172" width="4" height="22" rx="1" /><rect x="90" y="168" width="4" height="22" rx="1" /><rect x="128" y="165" width="4" height="22" rx="1" /></g>
+            <path d="M12,180L134,166M12,190L134,176" stroke="#b79d85" stroke-width="2.4" stroke-linecap="round" />
+            <!-- hay bales -->
+            <g>
+              <circle cx="266" cy="190" r="15" fill="#d9bf8f" /><circle cx="266" cy="190" r="10" fill="none" stroke="#bfa273" stroke-width="1.2" />
+              <circle cx="266" cy="190" r="5" fill="none" stroke="#bfa273" stroke-width="1.2" />
+              <circle cx="292" cy="198" r="12" fill="#e0c99c" /><circle cx="292" cy="198" r="8" fill="none" stroke="#bfa273" stroke-width="1.1" />
+              <circle cx="292" cy="198" r="4" fill="none" stroke="#bfa273" stroke-width="1.1" />
             </g>
-            <g fill="#fbf6ef" stroke="#d8c8b2" stroke-width="1">
-              <path d="M104,194L104,180L116,178L118,194Z" />
-              <path d="M140,194L140,180L152,178L154,194Z" />
-              <path d="M212,194L212,180L224,178L226,194Z" />
+            <!-- oak with lights -->
+            <g transform="translate(-16,0)">
+            <rect x="351" y="130" width="8" height="66" fill="#7a645d" />
+            <path d="M355,160L336,142M355,150L376,132" stroke="#7a645d" stroke-width="4" stroke-linecap="round" />
+            <g fill="#7b8468">
+              <circle cx="355" cy="104" r="32" /><circle cx="326" cy="124" r="22" /><circle cx="384" cy="124" r="22" />
+              <circle cx="345" cy="94" r="14" fill="#8a9272" />
             </g>
-            <rect x="164" y="182" width="26" height="10" fill="#b4785c" />
-            <path d="M20,44C90,74 150,74 200,58C250,42 310,44 380,60" fill="none" stroke="#c8b295" stroke-width="1" />
-            <g fill="#e8c489">
-              <circle cx="58" cy="61" r="2.6" />
-              <circle cx="96" cy="69" r="2.6" />
-              <circle cx="134" cy="72" r="2.6" />
-              <circle cx="172" cy="67" r="2.6" />
-              <circle cx="210" cy="56" r="2.6" />
-              <circle cx="248" cy="48" r="2.6" />
-              <circle cx="286" cy="46" r="2.6" />
-              <circle cx="324" cy="50" r="2.6" />
-              <circle cx="362" cy="56" r="2.6" />
+            <g stroke="#bfae98" stroke-width=".9" fill="none">
+              <path d="M340,128L340,146M356,134L356,152M372,128L372,144" />
             </g>
+            <g fill="#f1d9a8">
+              <circle cx="340" cy="148" r="3" /><circle cx="356" cy="154" r="3" /><circle cx="372" cy="146" r="3" />
+              <circle cx="330" cy="112" r="2.2" /><circle cx="348" cy="86" r="2.2" /><circle cx="372" cy="100" r="2.2" /><circle cx="384" cy="124" r="2.2" />
+            </g>
+            </g>
+            <!-- fairy light line to lantern post -->
+            <path d="M317,138Q285,170 246,150" fill="none" stroke="#bfae98" stroke-width="1" />
+            <g fill="#f1d9a8"><circle cx="304" cy="152" r="2.2" /><circle cx="292" cy="159" r="2.2" /><circle cx="280" cy="158" r="2.2" /><circle cx="262" cy="154" r="2.2" /></g>
+            <rect x="244" y="146" width="3" height="34" fill="#7a645d" />
+            <rect x="240" y="140" width="11" height="9" rx="2" fill="#f1d9a8" stroke="#a98b72" stroke-width="1" />
+            <!-- wildflowers -->
+            <g><path d="M66,225L66,219" stroke="#7b8468" stroke-width="1"/><circle cx="66" cy="219" r="2.4" fill="#a8626a"/><path d="M45,202L45,196" stroke="#7b8468" stroke-width="1"/><circle cx="45" cy="196" r="2.4" fill="#c9a98f"/><path d="M306,210L306,204" stroke="#7b8468" stroke-width="1"/><circle cx="306" cy="204" r="2" fill="#6b1524"/><path d="M73,222L73,216" stroke="#7b8468" stroke-width="1"/><circle cx="73" cy="216" r="2.4" fill="#c9a98f"/><path d="M292,211L292,205" stroke="#7b8468" stroke-width="1"/><circle cx="292" cy="205" r="2.8" fill="#c9a98f"/><path d="M336,218L336,212" stroke="#7b8468" stroke-width="1"/><circle cx="336" cy="212" r="2" fill="#efe7db"/><path d="M371,204L371,198" stroke="#7b8468" stroke-width="1"/><circle cx="371" cy="198" r="2.8" fill="#c9a98f"/><path d="M324,226L324,220" stroke="#7b8468" stroke-width="1"/><circle cx="324" cy="220" r="2.8" fill="#efe7db"/><path d="M358,215L358,209" stroke="#7b8468" stroke-width="1"/><circle cx="358" cy="209" r="2.4" fill="#efe7db"/><path d="M328,203L328,197" stroke="#7b8468" stroke-width="1"/><circle cx="328" cy="197" r="2" fill="#6b1524"/><path d="M321,224L321,218" stroke="#7b8468" stroke-width="1"/><circle cx="321" cy="218" r="2.4" fill="#efe7db"/><path d="M267,208L267,202" stroke="#7b8468" stroke-width="1"/><circle cx="267" cy="202" r="2.8" fill="#a8626a"/><path d="M297,215L297,209" stroke="#7b8468" stroke-width="1"/><circle cx="297" cy="209" r="2.8" fill="#c9a98f"/><path d="M300,205L300,199" stroke="#7b8468" stroke-width="1"/><circle cx="300" cy="199" r="2" fill="#efe7db"/><path d="M77,212L77,206" stroke="#7b8468" stroke-width="1"/><circle cx="77" cy="206" r="2" fill="#c9a98f"/><path d="M123,213L123,207" stroke="#7b8468" stroke-width="1"/><circle cx="123" cy="207" r="2.8" fill="#6b1524"/><path d="M79,212L79,206" stroke="#7b8468" stroke-width="1"/><circle cx="79" cy="206" r="2.4" fill="#c9a98f"/><path d="M45,211L45,205" stroke="#7b8468" stroke-width="1"/><circle cx="45" cy="205" r="2.8" fill="#efe7db"/><path d="M119,210L119,204" stroke="#7b8468" stroke-width="1"/><circle cx="119" cy="204" r="2.4" fill="#efe7db"/><path d="M252,203L252,197" stroke="#7b8468" stroke-width="1"/><circle cx="252" cy="197" r="2.4" fill="#efe7db"/><path d="M342,220L342,214" stroke="#7b8468" stroke-width="1"/><circle cx="342" cy="214" r="2" fill="#a8626a"/><path d="M59,205L59,199" stroke="#7b8468" stroke-width="1"/><circle cx="59" cy="199" r="2" fill="#6b1524"/><path d="M20,221L20,215" stroke="#7b8468" stroke-width="1"/><circle cx="20" cy="215" r="2" fill="#a8626a"/><path d="M69,205L69,199" stroke="#7b8468" stroke-width="1"/><circle cx="69" cy="199" r="2.8" fill="#c9a98f"/><path d="M301,208L301,202" stroke="#7b8468" stroke-width="1"/><circle cx="301" cy="202" r="2" fill="#a8626a"/><path d="M111,209L111,203" stroke="#7b8468" stroke-width="1"/><circle cx="111" cy="203" r="2.4" fill="#a8626a"/></g>
           </svg>
+          <div class="btns">
           <a class="btn"
             href="https://www.google.com/maps/place/Royal+oaks+cricket+ground/@31.4059485,74.2348786,17.65z/data=!4m6!3m5!1s0x391901005f6f80c5:0x3dfee0b25b2bf7c7!8m2!3d31.4058764!4d74.2357718!16s%2Fg%2F11zwn04p1p?entry=ttu&amp;g_ep=EgoyMDI2MDkwOC4wIKXMDSoASAFQAw%3D%3D"
             target="_blank" rel="noopener noreferrer">Open in Maps</a>
+          <a class="btn" href="shendi.ics" type="text/calendar">Add to Calendar</a>
+          </div>
         </div>
       </section>
 
@@ -1099,11 +1164,10 @@
       <section class="sec sec--dress">
         <svg class="torn" viewBox="0 0 462 18" preserveAspectRatio="none" aria-hidden="true">
           <path d="M0,18L0,8C44,14 78,4 124,9C172,14 204,5 252,10C298,15 340,6 388,11C418,14 440,9 462,12L462,18Z"
-            fill="#fcf3ec" />
+            fill="#efe7db" />
         </svg>
         <h2 class="h-sec">Dress Code</h2>
-        <p class="lede">We kindly ask guests to dress for the Barat &mdash; shalwar kameez, waistcoats, lehengas and
-          formal eastern wear.
+        <p class="lede">We kindly ask guests to dress in formal eastern wear&mdash; shalwar kameez, waistcoats, lehengas.
         </p>
         <svg class="guests" viewBox="-6 0 414 176" role="img" aria-label="Six guests in sherwanis and lehengas">
           <g fill="#6b1524">
@@ -1111,7 +1175,7 @@
             <path d="M36,58L37,87L55,87L56,58C52,54 40,54 36,58Z" />
             <circle cx="46" cy="44" r="9.5" />
           </g>
-          <g fill="#c9a24a" opacity=".6">
+          <g fill="#c9a98f" opacity=".6">
             <path d="M37,38C25,50 21,94 23,134L31,132C29,96 31,58 40,45Z" />
             <path d="M18,161L74,161L73,155L19,155Z" />
           </g>
@@ -1121,7 +1185,7 @@
             <path d="M95,60C93,76 92,102 91,126L125,126C124,102 123,76 121,60C117,55 99,55 95,60Z" />
             <circle cx="108" cy="44" r="10" />
           </g>
-          <g fill="#b08355" opacity=".85">
+          <g fill="#b99a80" opacity=".85">
             <path d="M103,57L108,68L113,57L110,55L108,60L106,55Z" />
             <rect x="107" y="68" width="1.6" height="54" />
           </g>
@@ -1130,7 +1194,7 @@
             <path d="M160,58L161,87L179,87L180,58C176,54 164,54 160,58Z" />
             <circle cx="170" cy="44" r="9.5" />
           </g>
-          <g fill="#c9a24a" opacity=".6">
+          <g fill="#c9a98f" opacity=".6">
             <path d="M161,38C149,50 145,94 147,134L155,132C153,96 155,58 164,45Z" />
             <path d="M142,161L198,161L197,155L143,155Z" />
           </g>
@@ -1140,7 +1204,7 @@
             <path d="M219,60C217,76 216,102 215,126L249,126C248,102 247,76 245,60C241,55 223,55 219,60Z" />
             <circle cx="232" cy="44" r="10" />
           </g>
-          <g fill="#b08355" opacity=".85">
+          <g fill="#b99a80" opacity=".85">
             <path d="M227,57L232,68L237,57L234,55L232,60L230,55Z" />
             <rect x="231" y="68" width="1.6" height="54" />
           </g>
@@ -1149,7 +1213,7 @@
             <path d="M284,58L285,87L303,87L304,58C300,54 288,54 284,58Z" />
             <circle cx="294" cy="44" r="9.5" />
           </g>
-          <g fill="#c9a24a" opacity=".6">
+          <g fill="#c9a98f" opacity=".6">
             <path d="M285,38C273,50 269,94 271,134L279,132C277,96 279,58 288,45Z" />
             <path d="M266,161L322,161L321,155L267,155Z" />
           </g>
@@ -1159,11 +1223,11 @@
             <path d="M343,60C341,76 340,102 339,126L373,126C372,102 371,76 369,60C365,55 347,55 343,60Z" />
             <circle cx="356" cy="44" r="10" />
           </g>
-          <g fill="#b08355" opacity=".85">
+          <g fill="#b99a80" opacity=".85">
             <path d="M351,57L356,68L361,57L358,55L356,60L354,55Z" />
             <rect x="355" y="68" width="1.6" height="54" />
           </g>
-          <ellipse cx="200" cy="166" rx="176" ry="8" fill="#4b342d" opacity=".12" />
+          <ellipse cx="200" cy="166" rx="176" ry="8" fill="#4a3a36" opacity=".12" />
         </svg>
       </section>
 
@@ -1171,7 +1235,7 @@
       <section class="sec sec--close">
         <svg class="torn" viewBox="0 0 462 18" preserveAspectRatio="none" aria-hidden="true">
           <path d="M0,18L0,7C46,13 80,3 126,8C174,13 206,4 254,9C300,14 342,5 390,10C420,13 442,8 462,10L462,18Z"
-            fill="#f4ddd3" />
+            fill="#e3d6c6" />
         </svg>
         <div class="close">
           <p class="close__line">Hope to see you there!</p>
@@ -1203,8 +1267,9 @@
   <!-- ============ ENVELOPE ============ -->
   <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Tap to open the invitation">
     <div class="env__stage">
-      <video class="env__film" id="openingFilm" src="opening.mp4" poster="opening-poster.jpg" muted playsinline
+      <video class="env__film" id="openingFilm" src="opening.mp4" poster="opening-poster.png" muted playsinline
         preload="auto" aria-hidden="true"></video>
+      <img class="env__film env__poster" id="openingPoster" src="opening-poster.png" alt="" aria-hidden="true">
       <p class="env__tap"><svg viewBox="0 0 22 12" aria-hidden="true">
           <use href="#chev" />
         </svg>Tap to open</p>
@@ -1227,16 +1292,16 @@
 
       var BLOOMS = [
         "--p1:#8c2a33;--p2:#6b1524;--p3:#48101c",
-        "--p1:#a8414a;--p2:#7d1f2c;--p3:#54101c",
-        "--p1:#eec7b7;--p2:#dca493;--p3:#bd8073",
+        "--p1:#8e2f3a;--p2:#6b1524;--p3:#48101c",
+        "--p1:#e3cdb8;--p2:#cfb298;--p3:#a98468",
         "--p1:#f6e7db;--p2:#e8d0c0;--p3:#cfae9b",
-        "--p1:#d98f92;--p2:#b8666c;--p3:#8e434b"
+        "--p1:#b87076;--p2:#954a54;--p3:#6b2a35"
       ];
       var GREENS = [
-        "--lf:#6d7b56;--lfv:#4c5739",
-        "--lf:#82906a;--lfv:#5c6844",
-        "--lf:#5c6b49;--lfv:#414d31",
-        "--lf:#97a37c;--lfv:#6d7a56"
+        "--lf:#7b8468;--lfv:#585f48",
+        "--lf:#8a9275;--lfv:#656c52",
+        "--lf:#69735a;--lfv:#4a5339",
+        "--lf:#a0a98a;--lfv:#757e60"
       ];
 
       function use(id, x, y, size, rot, style) {
@@ -1284,13 +1349,13 @@
         function leanAt(px) { return (px - W / 2) / W * 116; }
         var SOFT = [
           '--p1:#f4e5d5;--p2:#e2cbb4;--p3:#c9ab8f',
-          '--p1:#e5ac9c;--p2:#cd8878;--p3:#a9635a',
-          '--p1:#c07a7f;--p2:#9c545c;--p3:#75383f',
+          '--p1:#e0c8b3;--p2:#c9a98f;--p3:#a08066',
+          '--p1:#a8626a;--p2:#864049;--p3:#5f2931',
           '--p1:#a63a46;--p2:#7b2029;--p3:#54121a'
         ];
         var FOLIAGE = [
-          '--lf:#8a9a63;--lfv:#6c7a48', '--lf:#7f9d8e;--lfv:#5f7a6c',
-          '--lf:#9fae76;--lfv:#7b8a55', '--lf:#6f8354;--lfv:#54643e'
+          '--lf:#8a9272;--lfv:#6c7458', '--lf:#8f9a88;--lfv:#6f7a68',
+          '--lf:#9ba583;--lfv:#7b8564', '--lf:#78836a;--lfv:#5a644c'
         ];
         var edge = 'stroke:rgba(84,32,40,.38);stroke-width:2.2;';
 
@@ -1397,6 +1462,40 @@
           setTimeout(warmRest, 4000);   // a film that never reports ready must not pin the rest
         }
 
+        // An iPhone draws video through a different colour pipeline from
+        // images, so even a pixel-exact still of frame 0 looks duller than the
+        // film beside it. Muted inline video may start without a tap, so start
+        // it silently, hold it on frame 0 the moment it paints, and only then
+        // take the still away: the seal a guest sees before tapping is the film
+        // itself. Low Power Mode refuses the play(); the still then stays until
+        // the tap, as before.
+        var still = document.getElementById("openingPoster");
+        function dropStill() { if (still) still.classList.add("is-off"); }
+        function onPainted(fn) {
+          if (film.requestVideoFrameCallback) film.requestVideoFrameCallback(function () { requestAnimationFrame(fn); });
+          else film.addEventListener("timeupdate", function tu() {
+            if (film.currentTime > 0) { film.removeEventListener("timeupdate", tu); fn(); }
+          });
+        }
+        if (film && still && !reduce) {
+          var prime = film.play();
+          if (prime && prime.then) {
+            onPainted(function () {
+              if (opened) return;           // the guest tapped mid-prime: let it run
+              film.pause();
+              // the film has painted; give a seek back to 0 two frames to land
+              function settle() { requestAnimationFrame(function () { requestAnimationFrame(dropStill); }); }
+              if (film.currentTime === 0) { settle(); return; }
+              film.addEventListener("seeked", function sk() {
+                film.removeEventListener("seeked", sk);
+                if (!opened) settle();
+              });
+              film.currentTime = 0;
+            });
+            prime.catch(function () { });
+          }
+        }
+
         function open() {
           if (opened) return;
           opened = true;
@@ -1404,6 +1503,7 @@
           env.classList.add("is-opening");
           warmRest();                   // in case the tap beat the film being ready
           playHero();
+          if (still) onPainted(dropStill);
           var p = film.play();
           // never trap a guest behind a film that will not play
           if (p && p.catch) p.catch(function () { finish(); });
@@ -1478,7 +1578,7 @@
         var cv = document.getElementById("petals");
         if (!cv || reduce) return;
         var ctx = cv.getContext("2d"), W = 0, H = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
-        var COLORS = ["rgba(226,178,152,.55)", "rgba(206,140,130,.5)", "rgba(243,223,208,.6)", "rgba(160,72,84,.34)"];
+        var COLORS = ["rgba(214,190,168,.55)", "rgba(190,150,140,.45)", "rgba(240,230,218,.6)", "rgba(160,72,84,.34)"];
         var petals = [], i, r = rng(3);
         function resize() {
           W = cv.clientWidth; H = cv.clientHeight;
@@ -1686,6 +1786,16 @@
                   return;
                 }
                 started = true;
+                // iOS treats Web Audio as "ambient" sound, which the ring/silent
+                // switch mutes. Media playback ignores the switch; ask for that.
+                try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) { }
+                // Unlock the fallback element while the gesture is still live —
+                // by the time Web Audio could give up, it no longer counts as one.
+                if (el) {
+                  var up = el.play();
+                  if (up && up.catch) up.catch(function () { });
+                  el.pause();
+                }
                 viaWebAudio().catch(function () { viaPlainElement(); });
               }
 
@@ -1709,7 +1819,9 @@
               });
 
               // sound needs a gesture; opening the envelope is one
-              ['click', 'touchstart', 'keydown'].forEach(function (ev) {
+              // touchend, not touchstart: iOS does not count a touchstart as
+              // the user activation that audio needs
+              ['click', 'touchend', 'keydown'].forEach(function (ev) {
                 addEventListener(ev, function once() {
                   removeEventListener(ev, once);
                   if (wanted) begin();
@@ -1730,7 +1842,8 @@
             })();
 
     })();
-  </script>
+  
+    </script>
 </body>
 
 </html>
