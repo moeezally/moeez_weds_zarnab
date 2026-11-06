@@ -436,7 +436,7 @@
       font-size: 19px;
       color: var(--ink-soft);
       text-align: center;
-      margin: 0 auto;
+      margin: 0 auto 2px;
       max-width: 30ch;
       text-wrap: balance
     }
@@ -1126,8 +1126,8 @@
           <path d="M0,18L0,10C44,4 82,13 128,9C174,5 210,14 258,10C304,6 342,14 388,9C420,6 442,12 462,8L462,18Z"
             fill="#ece1d4" />
         </svg>
-        <h2 class="h-sec">Our Forever Begins</h2>
-        <p class="photos__intro">From one yes to a lifetime together.</p>
+        <p class="photos__intro">Our forever began with a yes to</p>
+        <h2 class="h-sec">A Lifetime Together</h2>
         <figure class="photo">
           <img src="photos/couple.jpg" width="684" height="1024" loading="lazy" decoding="async"
             alt="Zarnab and Moeez smiling on a flower-covered swing at their engagement, showing their rings">
@@ -1172,27 +1172,27 @@
               style="--p1:#c9a98f;--p2:#a98468;--p3:#7d4a3e" />
           </svg>
           <div class="sched__row">
-            <div class="sched__time">5 PM</div>
+            <div class="sched__time">6 PM</div>
             <div class="sched__rail"><i class="sched__node"></i></div>
             <div class="sched__what">Guest Arrival</div>
           </div>
           <div class="sched__row">
-            <div class="sched__time">6 PM</div>
+            <div class="sched__time">7 PM</div>
             <div class="sched__rail"><i class="sched__node"></i></div>
             <div class="sched__what">Nikkah</div>
           </div>
           <div class="sched__row">
-            <div class="sched__time">6:30 PM</div>
+            <div class="sched__time">8 PM</div>
             <div class="sched__rail"><i class="sched__node"></i></div>
             <div class="sched__what">Dinner</div>
           </div>
           <div class="sched__row">
-            <div class="sched__time">8 PM</div>
+            <div class="sched__time">9 PM</div>
             <div class="sched__rail"><i class="sched__node"></i></div>
             <div class="sched__what">Dance</div>
           </div>
           <div class="sched__row">
-            <div class="sched__time">10 PM</div>
+            <div class="sched__time">11 PM</div>
             <div class="sched__rail"><i class="sched__node"></i></div>
             <div class="sched__what">Rukhsati</div>
           </div>
@@ -1211,7 +1211,7 @@
             <use href="#flourish" />
           </svg>
           <p class="place__venue">Royal Oaks Farmhouse</p>
-          <p class="place__when">Friday, 8 January 2027 at 5:00 PM</p>
+          <p class="place__when">Friday, 8 January 2027 at 6:00 PM</p>
           <p class="place__addr">Royal Oaks Cricket Ground, Green Acres Main Blvd, Green Acres Extension, Gul Nishan
             Society, Lahore, Pakistan</p>
           <svg class="place__art" viewBox="0 0 400 224" role="img"
@@ -1431,7 +1431,7 @@
       "use strict";
       var NS = "http://www.w3.org/2000/svg";
       var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      var WEDDING = new Date(Date.UTC(2027, 0, 8, 12, 0, 0)); // 5:00 PM in Lahore (PKT = UTC+5, no DST)
+      var WEDDING = new Date(Date.UTC(2027, 0, 8, 13, 0, 0)); // 6:00 PM in Lahore (PKT = UTC+5, no DST)
 
       /* ---------- tiny deterministic RNG so the garden looks the same every load ---------- */
       function rng(seed) {

@@ -7,7 +7,7 @@
  *
  * BUMP VERSION whenever a file in ASSETS changes, or guests keep the old one.
  */
-var VERSION = 'mz-2026-11-06d';
+var VERSION = 'mz-2026-11-06e';
 var ASSETS = [
   './',
   './opening-poster.png',
