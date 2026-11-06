@@ -1,15 +1,15 @@
 BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Moeez and Zarnab//Shendi//EN
+PRODID:-//Zarnab and Moeez//Shendi//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 BEGIN:VEVENT
 UID:shendi-20270108@moeez-zarnab
 DTSTAMP:20261106T120000Z
-SEQUENCE:1
+SEQUENCE:2
 DTSTART:20270108T130000Z
 DTEND:20270108T190000Z
-SUMMARY:Moeez & Zarnab's Shendi
+SUMMARY:Zarnab & Moeez's Shendi
 LOCATION:Royal Oaks Farmhouse\, Royal Oaks Cricket Ground\, Green Acres Mai
  n Blvd\, Green Acres Extension\, Gul Nishan Society\, Lahore\, Pakistan
 GEO:31.4058764;74.2357718

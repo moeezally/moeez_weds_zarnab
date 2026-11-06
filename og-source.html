@@ -1,0 +1,206 @@
+<!doctype html>
+<!-- Source for og-image.png (the link preview). Not shipped; render at 1200x630:
+     Chrome --headless --window-size=1200,630 --screenshot=og-image.png og-source.html?v=a -->
+<html><head><meta charset="utf-8"><title>OG source</title>
+<style>
+@font-face{font-family:"Cinzel";font-weight:400 500;src:url(fonts/cinzel-normal.woff2) format("woff2")}
+@font-face{font-family:"Cormorant";font-style:italic;font-weight:300 400;src:url(fonts/cormorant-italic.woff2) format("woff2")}
+@font-face{font-family:"Italianno";src:url(fonts/italianno-normal.woff2) format("woff2")}
+html,body{margin:0;width:1200px;height:630px;overflow:hidden}
+body{background:radial-gradient(70% 90% at 50% 45%,#f6f0e7 0%,#efe7db 55%,#e3d6c6 100%);
+  font-family:"Cinzel",serif;color:#4a3a36;position:relative}
+.frame{position:absolute;inset:26px;border:1.5px solid rgba(185,154,128,.75);border-radius:6px}
+.frame::after{content:"";position:absolute;inset:7px;border:1px solid rgba(185,154,128,.45);border-radius:3px}
+svg.flora{position:absolute;inset:0;width:1200px;height:630px}
+.mid{position:absolute;left:0;right:0;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.mono{position:relative;width:290px;height:290px;display:grid;place-items:center}
+.mono svg{position:absolute;inset:0;overflow:visible}
+.letters{font-family:"Italianno",cursive;line-height:1;display:flex;align-items:baseline;gap:4px;transform:translate(-14px,10px)}
+.letters b{font-weight:400;font-size:122px}
+.letters i{font-style:normal;font-size:70px}
+.names{margin-top:22px;font-size:25px;letter-spacing:.32em;color:#6b1524;padding-left:.32em}
+.date{margin-top:10px;font-size:16px;letter-spacing:.3em;color:#7a645d;padding-left:.3em}
+/* A: gold ring on paper */
+.a .letters b{color:#6b1524}.a .letters i{color:#8f6f58}
+/* B: burgundy wax seal */
+.b .letters b{color:#f3dcc4}.b .letters i{color:#e3b292}
+</style></head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs>
+      <symbol id="rose" viewBox="-50 -50 100 100">
+        <g fill="var(--p1,#8c2a33)">
+          <path d="M0,-44C13,-44 21,-33 21,-23C21,-11 11,-3 0,-3C-11,-3 -21,-11 -21,-23C-21,-33 -13,-44 0,-44Z" />
+          <path d="M0,-44C13,-44 21,-33 21,-23C21,-11 11,-3 0,-3C-11,-3 -21,-11 -21,-23C-21,-33 -13,-44 0,-44Z"
+            transform="rotate(45)" />
+          <path d="M0,-44C13,-44 21,-33 21,-23C21,-11 11,-3 0,-3C-11,-3 -21,-11 -21,-23C-21,-33 -13,-44 0,-44Z"
+            transform="rotate(90)" />
+          <path d="M0,-44C13,-44 21,-33 21,-23C21,-11 11,-3 0,-3C-11,-3 -21,-11 -21,-23C-21,-33 -13,-44 0,-44Z"
+            transform="rotate(135)" />
+          <path d="M0,-44C13,-44 21,-33 21,-23C21,-11 11,-3 0,-3C-11,-3 -21,-11 -21,-23C-21,-33 -13,-44 0,-44Z"
+            transform="rotate(180)" />
+          <path d="M0,-44C13,-44 21,-33 21,-23C21,-11 11,-3 0,-3C-11,-3 -21,-11 -21,-23C-21,-33 -13,-44 0,-44Z"
+            transform="rotate(225)" />
+          <path d="M0,-44C13,-44 21,-33 21,-23C21,-11 11,-3 0,-3C-11,-3 -21,-11 -21,-23C-21,-33 -13,-44 0,-44Z"
+            transform="rotate(270)" />
+          <path d="M0,-44C13,-44 21,-33 21,-23C21,-11 11,-3 0,-3C-11,-3 -21,-11 -21,-23C-21,-33 -13,-44 0,-44Z"
+            transform="rotate(315)" />
+        </g>
+        <g fill="var(--p2,#6b1524)">
+          <path d="M0,-44C13,-44 21,-33 21,-23C21,-11 11,-3 0,-3C-11,-3 -21,-11 -21,-23C-21,-33 -13,-44 0,-44Z"
+            transform="rotate(22)scale(.68)" />
+          <path d="M0,-44C13,-44 21,-33 21,-23C21,-11 11,-3 0,-3C-11,-3 -21,-11 -21,-23C-21,-33 -13,-44 0,-44Z"
+            transform="rotate(82)scale(.68)" />
+          <path d="M0,-44C13,-44 21,-33 21,-23C21,-11 11,-3 0,-3C-11,-3 -21,-11 -21,-23C-21,-33 -13,-44 0,-44Z"
+            transform="rotate(142)scale(.68)" />
+          <path d="M0,-44C13,-44 21,-33 21,-23C21,-11 11,-3 0,-3C-11,-3 -21,-11 -21,-23C-21,-33 -13,-44 0,-44Z"
+            transform="rotate(202)scale(.68)" />
+          <path d="M0,-44C13,-44 21,-33 21,-23C21,-11 11,-3 0,-3C-11,-3 -21,-11 -21,-23C-21,-33 -13,-44 0,-44Z"
+            transform="rotate(262)scale(.68)" />
+          <path d="M0,-44C13,-44 21,-33 21,-23C21,-11 11,-3 0,-3C-11,-3 -21,-11 -21,-23C-21,-33 -13,-44 0,-44Z"
+            transform="rotate(322)scale(.68)" />
+        </g>
+        <g fill="var(--p3,#48101c)">
+          <path d="M0,-44C13,-44 21,-33 21,-23C21,-11 11,-3 0,-3C-11,-3 -21,-11 -21,-23C-21,-33 -13,-44 0,-44Z"
+            transform="rotate(0)scale(.38)" />
+          <path d="M0,-44C13,-44 21,-33 21,-23C21,-11 11,-3 0,-3C-11,-3 -21,-11 -21,-23C-21,-33 -13,-44 0,-44Z"
+            transform="rotate(72)scale(.38)" />
+          <path d="M0,-44C13,-44 21,-33 21,-23C21,-11 11,-3 0,-3C-11,-3 -21,-11 -21,-23C-21,-33 -13,-44 0,-44Z"
+            transform="rotate(144)scale(.38)" />
+          <path d="M0,-44C13,-44 21,-33 21,-23C21,-11 11,-3 0,-3C-11,-3 -21,-11 -21,-23C-21,-33 -13,-44 0,-44Z"
+            transform="rotate(216)scale(.38)" />
+          <path d="M0,-44C13,-44 21,-33 21,-23C21,-11 11,-3 0,-3C-11,-3 -21,-11 -21,-23C-21,-33 -13,-44 0,-44Z"
+            transform="rotate(288)scale(.38)" />
+        </g>
+        <circle r="4.4" fill="var(--p3,#48101c)" />
+      </symbol>
+
+      <symbol id="leaf" viewBox="-16 -30 32 60">
+        <path d="M0,-27C10,-16 12,-2 0,27C-12,-2 -10,-16 0,-27Z" fill="var(--lf,#6d7b56)" />
+        <path d="M0,-24L0,24" stroke="var(--lfv,#4f5b3c)" stroke-width="1.1" opacity=".55" fill="none" />
+      </symbol>
+
+      <symbol id="bud" viewBox="-12 -14 24 28">
+        <path d="M0,-12C7,-9 9,0 0,12C-9,0 -7,-9 0,-12Z" fill="var(--p1,#8c2a33)" />
+      </symbol>
+
+
+<radialGradient id="wax" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#8e2f3a"/><stop offset=".6" stop-color="#6b1524"/><stop offset="1" stop-color="#48101c"/></radialGradient>
+</defs></svg>
+<div class="frame"></div>
+<svg class="flora" id="flora" viewBox="0 0 1200 630"></svg>
+<div class="mid"><div class="mono">
+  <svg viewBox="0 0 290 290" id="ring"></svg>
+</div>
+<div class="names">MOEEZ &amp; ZARNAB</div>
+<div class="date">SHENDI &amp; NIKKAH &middot; 8 JANUARY 2027</div>
+</div>
+<script>
+var NS="http://www.w3.org/2000/svg";
+      function rng(seed) {
+        var s = seed >>> 0;
+        return function () { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; };
+      }
+      function pick(r, arr) { return arr[Math.floor(r() * arr.length) % arr.length]; }
+
+      var BLOOMS = [
+        "--p1:#8c2a33;--p2:#6b1524;--p3:#48101c",
+        "--p1:#8e2f3a;--p2:#6b1524;--p3:#48101c",
+        "--p1:#e3cdb8;--p2:#cfb298;--p3:#a98468",
+        "--p1:#f6e7db;--p2:#e8d0c0;--p3:#cfae9b",
+        "--p1:#b87076;--p2:#954a54;--p3:#6b2a35"
+      ];
+      var GREENS = [
+        "--lf:#7b8468;--lfv:#585f48",
+        "--lf:#8a9275;--lfv:#656c52",
+        "--lf:#69735a;--lfv:#4a5339",
+        "--lf:#a0a98a;--lfv:#757e60"
+      ];
+
+      function use(id, x, y, size, rot, style) {
+        var u = document.createElementNS(NS, "use");
+        u.setAttribute("href", "#" + id);
+        u.setAttribute("x", (x - size / 2).toFixed(2));
+        u.setAttribute("y", (y - size / 2).toFixed(2));
+        u.setAttribute("width", size.toFixed(2));
+        u.setAttribute("height", size.toFixed(2));
+        u.setAttribute("transform", "rotate(" + rot.toFixed(1) + " " + x.toFixed(2) + " " + y.toFixed(2) + ")");
+        if (style) u.setAttribute("style", style);
+        return u;
+      }
+
+      /* A cluster: leaves laid down first, blooms on top, a few buds between. */
+      function cluster(host, cx, cy, spread, nBloom, minB, maxB, nLeaf, seed) {
+        var r = rng(seed), g = document.createElementNS(NS, "g"), i, a, d;
+        for (i = 0; i < nLeaf; i++) {
+          a = r() * Math.PI * 2; d = spread * (0.35 + r() * 0.95);
+          g.appendChild(use("leaf", cx + Math.cos(a) * d, cy + Math.sin(a) * d * 0.8,
+            spread * (0.32 + r() * 0.3), r() * 360, pick(r, GREENS)));
+        }
+        for (i = 0; i < Math.round(nBloom * 0.5); i++) {
+          a = r() * Math.PI * 2; d = spread * (0.4 + r() * 0.8);
+          g.appendChild(use("bud", cx + Math.cos(a) * d, cy + Math.sin(a) * d * 0.8,
+            spread * 0.22, r() * 360, pick(r, BLOOMS)));
+        }
+        for (i = 0; i < nBloom; i++) {
+          a = r() * Math.PI * 2; d = spread * r() * 0.85;
+          g.appendChild(use("rose", cx + Math.cos(a) * d, cy + Math.sin(a) * d * 0.75,
+            minB + r() * (maxB - minB), r() * 360, pick(r, BLOOMS)));
+        }
+        host.appendChild(g);
+        return g;
+      }
+
+var v=(location.search.match(/v=(\w)/)||[,"a"])[1];
+document.body.className=v;
+var f=document.getElementById("flora");
+cluster(f,92,88,62,6,34,58,14,53);
+cluster(f,1108,542,62,6,34,58,14,67);
+cluster(f,1112,84,38,3,22,36,8,11);
+cluster(f,88,548,38,3,22,36,8,29);
+var ring=document.getElementById("ring");
+/* Monogram, fitted by its ink rather than its letter boxes: Italianno's Z
+   swash reaches far past its advance width. Measure every glyph's real
+   extent, then scale so the whole ink box (corners included) sits inside
+   a circle of radius FIT around the ring's centre. */
+var FIT=116;
+async function monogram(colors){
+  await document.fonts.load("100px Italianno");
+  var c=document.createElement("canvas").getContext("2d");
+  var parts=[["M",100,colors[0]],["&",57,colors[1]],["Z",100,colors[0]]],x=0,gap=3,L=1e9,R=-1e9,T=1e9,B=-1e9,pos=[];
+  parts.forEach(function(p){
+    c.font=p[1]+"px Italianno";var m=c.measureText(p[0]);
+    L=Math.min(L,x-m.actualBoundingBoxLeft);R=Math.max(R,x+m.actualBoundingBoxRight);
+    T=Math.min(T,-m.actualBoundingBoxAscent);B=Math.max(B,m.actualBoundingBoxDescent);
+    pos.push(x);x+=m.width+gap;
+  });
+  var w=R-L,h=B-T,k=FIT/Math.hypot(w/2,h/2);
+  var tx=145-k*(L+R)/2,ty=145-k*(T+B)/2;
+  var g=document.createElementNS(NS,"g");
+  g.setAttribute("transform","translate("+tx.toFixed(2)+","+ty.toFixed(2)+") scale("+k.toFixed(4)+")");
+  parts.forEach(function(p,i){
+    var t=document.createElementNS(NS,"text");
+    t.setAttribute("x",pos[i]);t.setAttribute("y",0);
+    t.setAttribute("font-family","Italianno");t.setAttribute("font-size",p[1]);t.setAttribute("fill",p[2]);
+    t.textContent=p[0];g.appendChild(t);
+  });
+  ring.appendChild(g);
+}
+if(v==="a"){
+  ring.innerHTML='<circle cx="145" cy="145" r="132" fill="#f8f2ea" stroke="#b99a80" stroke-width="1.6"/>'+
+   '<circle cx="145" cy="145" r="122" fill="none" stroke="#c9a98f" stroke-width=".9" stroke-dasharray="1.5 5" stroke-linecap="round"/>';
+  var g=document.createElementNS(NS,"g");ring.appendChild(g);
+  cluster(g,145,276,20,3,15,24,7,101);
+  monogram(["#6b1524","#8f6f58"]);
+} else {
+  // wax seal: a lumpy disc, a pressed inner ring
+  // soft lumps: a few low-frequency waves around the rim, joined with smooth curves
+  var n=72,i,P=[];for(i=0;i<n;i++){var a=i/n*Math.PI*2,r=134+4*Math.sin(a*5+.7)+2.5*Math.sin(a*9+2.1)+1.5*Math.sin(a*13);P.push([145+Math.cos(a)*r,145+Math.sin(a)*r]);}
+  var d="M"+((P[0][0]+P[1][0])/2).toFixed(1)+","+((P[0][1]+P[1][1])/2).toFixed(1);
+  for(i=1;i<=n;i++){var c=P[i%n],q=P[(i+1)%n];d+="Q"+c[0].toFixed(1)+","+c[1].toFixed(1)+" "+((c[0]+q[0])/2).toFixed(1)+","+((c[1]+q[1])/2).toFixed(1);}
+  ring.innerHTML='<path d="'+d+'Z" fill="url(#wax)" style="filter:drop-shadow(0 8px 12px rgba(72,16,28,.35))"/>'+
+   '<circle cx="145" cy="145" r="112" fill="none" stroke="#48101c" stroke-width="5" opacity=".55"/>'+
+   '<circle cx="145" cy="145" r="112" fill="none" stroke="#a54a54" stroke-width="1.2" opacity=".7" transform="translate(-1.5,-1.5)"/>';
+  monogram(["#f3dcc4","#e3b292"]);
+}
+</script>
+</body></html>
