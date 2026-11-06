@@ -7,7 +7,7 @@
  *
  * BUMP VERSION whenever a file in ASSETS changes, or guests keep the old one.
  */
-var VERSION = 'mz-2026-11-03m';
+var VERSION = 'mz-2026-11-06c';
 var ASSETS = [
   './',
   './opening-poster.png',
@@ -18,7 +18,8 @@ var ASSETS = [
   './fonts/cinzel-normal.woff2',
   './fonts/cormorant-normal.woff2',
   './fonts/cormorant-italic.woff2',
-  './fonts/italianno-normal.woff2'
+  './fonts/italianno-normal.woff2',
+  './fonts/amiri-dua.woff2'
 ];
 
 self.addEventListener('install', function (e) {

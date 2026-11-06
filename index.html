@@ -43,6 +43,11 @@
       font-family: "Cormorant"; font-style: italic; font-weight: 300 400;
       font-display: swap; src: url(fonts/cormorant-italic.woff2) format("woff2");
     }
+    /* Subset to just the letters in the two duas (~31 KB). */
+    @font-face {
+      font-family: "Amiri"; font-style: normal; font-weight: 400;
+      font-display: swap; src: url(fonts/amiri-dua.woff2) format("woff2");
+    }
     @font-face {
       font-family: "Italianno"; font-style: normal; font-weight: 400;
       font-display: swap; src: url(fonts/italianno-normal.woff2) format("woff2");
@@ -133,6 +138,9 @@
       max-width: var(--paper-w);
       position: relative;
       overflow: hidden;
+      /* clip, not hidden: hidden makes .paper a scroll container, and then
+         nothing inside it can be position:sticky (the photo carousel). */
+      overflow: clip;
       background: var(--cream);
       box-shadow: 0 0 90px rgba(0, 0, 0, .55);
     }
@@ -145,6 +153,10 @@
 
     .sec--invite {
       background: var(--blush-2)
+    }
+
+    .sec--photos {
+      background: var(--blush-3)
     }
 
     .sec--count {
@@ -353,7 +365,7 @@
     /* ---------- invitation ---------- */
     .invite-card {
       position: relative;
-      padding: 34px 6px 66px;
+      padding: 78px 6px 70px;
       text-align: center
     }
 
@@ -374,22 +386,185 @@
       transform: rotate(180deg)
     }
 
-    .invite-names {
-      font-family: var(--script);
-      font-size: clamp(34px, 9.4vw, 40px);
-      color: var(--gold-dim);
-      margin: 0;
-      line-height: 1.25;
-
-      word-spacing: 0.14em;
+    .invite-card p {
+      margin: 0
     }
 
-    .invite-warm {
+    .invite-caps,
+    .invite-event {
+      font-family: var(--caps);
+      text-transform: uppercase;
+      line-height: 1.5
+    }
+
+    .invite-caps {
+      font-size: clamp(11px, 3.1vw, 12.5px);
+      letter-spacing: .16em;
+      color: var(--ink-soft)
+    }
+
+    .invite-event {
+      font-size: clamp(20px, 5.8vw, 24px);
+      letter-spacing: .1em;
+      color: var(--burgundy);
+      margin: 10px 0 6px !important
+    }
+
+    .invite-name {
       font-family: var(--script);
-      font-size: clamp(31px, 8.6vw, 37px);
+      font-size: clamp(52px, 15vw, 64px);
+      color: var(--gold-dim);
+      line-height: 1.05
+    }
+
+    .invite-caps+.invite-name {
+      margin-top: 6px !important
+    }
+
+    .invite-caps+.invite-amp {
+      margin-top: 14px !important
+    }
+
+    .invite-amp {
+      font-family: var(--script);
+      font-size: clamp(30px, 8.6vw, 36px);
       color: var(--wine);
-      margin: 0 0 16px;
-      line-height: 1.25;
+      line-height: 1
+    }
+
+    /* ---------- photos ---------- */
+    .photos__intro {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 19px;
+      color: var(--ink-soft);
+      text-align: center;
+      margin: 0 auto;
+      max-width: 30ch;
+      text-wrap: balance
+    }
+
+    .photos {
+      display: grid;
+      gap: 34px;
+      margin-top: 30px
+    }
+
+    .photo {
+      margin: 0;
+      text-align: center
+    }
+
+    .photo img {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      margin: 0 auto;
+      background: var(--blush);
+      border: 1px solid rgba(201, 169, 143, .7);
+      box-shadow: 0 18px 40px -18px rgba(74, 58, 54, .45)
+    }
+
+    .photo--rect img {
+      border-radius: 22px
+    }
+
+    .photo figcaption {
+      font-family: var(--script);
+      font-size: clamp(30px, 8.6vw, 36px);
+      color: var(--wine);
+      line-height: 1.2;
+      margin-top: 10px
+    }
+
+    .photos__dots {
+      display: none
+    }
+
+    /* Carousel: the section is tall, its contents stick to the top of the
+       screen, and scrolling through it crossfades one photo to the next.
+       Enabled from JS only where overflow:clip exists (else sticky fails). */
+    .photos-carousel .sec--photos {
+      height: calc(100vh + 3 * 72vh);
+      height: calc(100svh + 3 * 72svh);
+      padding-block: 0
+    }
+
+    .photos-carousel .photos__pin {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      height: 100svh;
+      display: flex;
+      flex-direction: column;
+      padding: 30px 0 22px;
+      box-sizing: border-box
+    }
+
+    .photos-carousel .photos {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      margin-top: 20px;
+      display: block;
+      /* lets the frame size itself from the space left on screen (cqw/cqh) */
+      container-type: size
+    }
+
+    .photos-carousel .photo {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0;
+      transform: scale(.985);
+      transition: opacity .7s ease, transform .9s ease;
+      pointer-events: none
+    }
+
+    .photos-carousel .photo.is-on {
+      opacity: 1;
+      transform: none
+    }
+
+    /* One frame size for all four, so only the picture changes. It is as big
+       as fits: the full width, or the height left after the caption. */
+    .photos-carousel .photo img {
+      flex: none;
+      width: min(100cqw, (100cqh - 58px) * .8);
+      height: auto;
+      max-width: none;
+      aspect-ratio: 4 / 5
+    }
+
+    .photos-carousel .photo figcaption {
+      flex: none;
+      margin-top: 8px
+    }
+
+    .photos-carousel .photos__dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 12px
+    }
+
+    .photos__dots i {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: .35;
+      transition: opacity .4s, transform .4s
+    }
+
+    .photos__dots i.is-on {
+      opacity: 1;
+      transform: scale(1.3);
+      background: var(--wine)
     }
 
     /* ---------- countdown ---------- */
@@ -616,6 +791,53 @@
     .close {
       text-align: center;
       padding-bottom: 20px
+    }
+
+    .ar {
+      font-family: "Amiri", "Traditional Arabic", "Geeza Pro", serif;
+      font-weight: 400;
+      line-height: 1.9
+    }
+
+    .invite-bismillah {
+      font-size: clamp(24px, 6.8vw, 28px);
+      color: var(--burgundy);
+      margin: 0 0 16px !important
+    }
+
+    .dua {
+      max-width: 340px;
+      margin: 0 auto 34px
+    }
+
+    .dua__ar span {
+      display: inline-block
+    }
+
+    .dua__ar {
+      font-size: clamp(23px, 6.6vw, 27px);
+      color: var(--burgundy);
+      margin: 0 0 6px;
+      text-wrap: balance
+    }
+
+    .dua__en {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 18px;
+      color: var(--ink);
+      margin: 0 0 8px;
+      text-wrap: balance
+    }
+
+    .dua__src {
+      font-family: var(--caps);
+      font-size: 10.5px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      white-space: nowrap;
+      margin: 0
     }
 
     .close__line {
@@ -997,10 +1219,54 @@
             aria-hidden="true"></svg>
           <svg class="invite-card__corner invite-card__corner--br" viewBox="0 0 120 120" id="cornerBR"
             aria-hidden="true"></svg>
-          <p class="invite-names">Moeez &amp; Zarnab</p>
-          <p class="invite-warm">warmly invite you</p>
-          <p class="lede">to celebrate with them as their families come together for their Shendi, and for the Nikah
-            that follows.</p>
+          <p class="ar invite-bismillah" lang="ar" dir="rtl">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</p>
+          <p class="invite-caps">With great pleasure,<br>you are cordially invited<br>to grace the</p>
+          <p class="invite-event">Shendi &amp; Nikkah</p>
+          <p class="invite-caps">of</p>
+          <p class="invite-name">Moeez</p>
+          <p class="invite-caps">S/O Mr &amp; Mrs Ali Akbar Malik</p>
+          <p class="invite-amp">&amp;</p>
+          <p class="invite-name">Zarnab</p>
+          <p class="invite-caps">D/O Mr &amp; Mrs Tahir Hussain</p>
+        </div>
+      </section>
+
+      <!-- ============ PHOTOS ============ -->
+      <section class="sec sec--photos">
+        <svg class="torn" viewBox="0 0 462 18" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0,18L0,10C44,4 82,13 128,9C174,5 210,14 258,10C304,6 342,14 388,9C420,6 442,12 462,8L462,18Z"
+            fill="#ece1d4" />
+        </svg>
+        <div class="photos__pin">
+          <h2 class="h-sec">Where Forever Began</h2>
+          <p class="photos__intro">A few moments from the evening we said yes.</p>
+          <div class="photos" id="photos">
+            <figure class="photo photo--rect">
+              <img src="photos/hands-hold.jpg" width="675" height="1200" loading="lazy" decoding="async"
+                style="object-position:50% 72%"
+                alt="Moeez holding Zarnab's hennaed hand, her ring catching the light">
+              <figcaption>Hand in hand</figcaption>
+            </figure>
+            <figure class="photo photo--rect">
+              <img src="photos/swing-smile.jpg" width="846" height="1350" loading="lazy" decoding="async"
+                style="object-position:50% 84%"
+                alt="Zarnab and Moeez smiling on a flower-covered swing, showing their engagement rings">
+              <figcaption>Two hearts, one yes</figcaption>
+            </figure>
+            <figure class="photo photo--rect">
+              <img src="photos/hands-rings.jpg" width="675" height="1200" loading="lazy" decoding="async"
+                style="object-position:50% 58%"
+                alt="Their open palms side by side, each holding a ring">
+              <figcaption>Two rings, one promise</figcaption>
+            </figure>
+            <figure class="photo photo--rect">
+              <img src="photos/swing-ring.jpg" width="820" height="1350" loading="lazy" decoding="async"
+                style="object-position:50% 84%"
+                alt="Moeez slipping the ring onto Zarnab's finger on the swing">
+              <figcaption>Sealed with a ring</figcaption>
+            </figure>
+          </div>
+          <div class="photos__dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
         </div>
       </section>
 
@@ -1049,7 +1315,7 @@
           <div class="sched__row">
             <div class="sched__time">6 PM</div>
             <div class="sched__rail"><i class="sched__node"></i></div>
-            <div class="sched__what">Nikah</div>
+            <div class="sched__what">Nikkah</div>
           </div>
           <div class="sched__row">
             <div class="sched__time">6:30 PM</div>
@@ -1253,6 +1519,11 @@
             fill="#e3d6c6" />
         </svg>
         <div class="close">
+          <div class="dua">
+            <p class="ar dua__ar" lang="ar" dir="rtl"><span>بَارَكَ ٱللَّٰهُ لَكَ وَبَارَكَ عَلَيْكَ</span> <span>وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ</span></p>
+            <p class="dua__en">“May Allah bless you, bless your union, and bring you together in goodness.”</p>
+            <p class="dua__src">Dua for the newlyweds &middot; Tirmidhi 1091</p>
+          </div>
           <p class="close__line">Hope to see you there!</p>
           <p class="close__names">Moeez &amp; Zarnab</p>
         </div>
@@ -1858,6 +2129,36 @@
 
     })();
   
+      /* ---------- photo carousel ---------- */
+      (function () {
+        var sec = document.querySelector(".sec--photos");
+        if (!sec || !(window.CSS && CSS.supports("overflow", "clip"))) return;
+        var figs = sec.querySelectorAll(".photo"), dots = sec.querySelectorAll(".photos__dots i");
+        var n = figs.length, cur = -1, queued = false;
+        document.documentElement.classList.add("photos-carousel");
+        // all four sit in one spot, so none of them may wait for lazy loading
+        figs.forEach(function (f) { f.querySelector("img").loading = "eager"; });
+        function show(i) {
+          if (i === cur) return;
+          cur = i;
+          for (var k = 0; k < n; k++) {
+            figs[k].classList.toggle("is-on", k === i);
+            figs[k].setAttribute("aria-hidden", k === i ? "false" : "true");
+            if (dots[k]) dots[k].classList.toggle("is-on", k === i);
+          }
+        }
+        function update() {
+          queued = false;
+          var r = sec.getBoundingClientRect();
+          var run = r.height - window.innerHeight;
+          var p = run > 0 ? Math.min(1, Math.max(0, -r.top / run)) : 0;
+          show(Math.min(n - 1, Math.floor(p * n)));
+        }
+        function onScroll() { if (!queued) { queued = true; requestAnimationFrame(update); } }
+        addEventListener("scroll", onScroll, { passive: true });
+        addEventListener("resize", onScroll);
+        update();
+      })();
     </script>
 </body>
 
